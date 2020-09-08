@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <title>Dashboard Template for Bootstrap</title>
     <!-- Bootstrap core CSS -->
@@ -39,9 +41,10 @@
             animation: chartjs-render-animation 0.001s;
         }
     </style>
+    <script charset="utf-8" th:src="@{https://map.qq.com/api/gljs?v=1.exp&key={key}(key=#{tencent.key})}"></script>
 </head>
 
-<body>
+<body onload="initMap()">
 <!--引入topbar-->
 <div th:replace="commons/bar::topbar"></div>
 <div class="container-fluid">
@@ -49,23 +52,60 @@
         <!--引入sidebar-->
         <div th:replace="commons/bar::#sidebar(activeUri='runTraceList.html')"></div>
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-            <h2><a class="btn btn-sm btn-success" href="emp" th:href="@{/emp}">员工添加</a></h2>
-            <div class="table-responsive">
-                <table class="table table-striped table-sm">
-                    <thead>
-                    <tr>
-                        <th>id</th>
-                        <th>操作</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="trace:${traces}">
-                        <td th:text="${trace.latitude}"></td>
-                        <td th:text="${trace.longitude}"></td>
-                    </tr>
-                    </tbody>
-                </table>
+            <div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                <div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                    <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
+                </div>
+                <div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                    <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
+                </div>
             </div>
+            <div id="container"></div>
+            <script type="text/javascript" th:inline="javascript">
+                var traces = [[${traces}]]
+                var paths = []
+                for(var i = 0; i < traces.length; i++) {
+                    paths.push(new TMap.LatLng(traces[i].latitude, traces[i].longitude))
+                }
+                var map;
+
+
+                function initMap() {
+                    var center = paths[0]
+                    //初始化地图
+                    map = new TMap.Map("container", {
+                        zoom: 17,//设置地图缩放级别
+                        center: center,//设置地图中心点坐标
+                    });
+
+                    var polylineLayer = new TMap.MultiPolyline({
+                        map: map, // 绘制到目标地图
+                        // 折线样式定义
+                        styles: {
+                            'style_blue': new TMap.PolylineStyle({
+                                color: '#3777FF', //线填充色
+                                width: 10, //折线宽度
+                                borderWidth: 0, //边线宽度
+                                showArrow: true,
+                                arrowOptions: {
+                                    space: 70
+                                },
+                                lineCap: 'round',
+                            }),
+                        },
+                        geometries: [{
+                            styleId: 'style_blue',
+                            rainbowPaths: [ // 彩虹线数组
+                                {
+                                    path: paths,
+                                    color: 'rgba(0, 180, 0, 1)',
+                                }
+                            ],
+                        }],
+                    });
+                }
+            </script>
+
         </main>
     </div>
 </div>
@@ -74,13 +114,16 @@
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
 <script type="text/javascript" src="asserts/js/jquery-3.2.1.slim.min.js" th:src="@{/webjars/jquery/3.5.1/jquery.js}"></script>
-<script type="text/javascript" src="asserts/js/popper.min.js" th:src="@{/webjars/popper.js/1.11.1/dist/popper.js}"></script>
+<script type="text/javascript" src="/asserts/js/popper.min.js"></script>
 <script type="text/javascript" src="asserts/js/bootstrap.min.js" th:src="@{/webjars/bootstrap/4.5.2/js/bootstrap.js}"></script>
 
 <!-- Icons -->
-<script type="text/javascript" src="asserts/js/feather.min.js" th:src="@{/asserts/js/feather.min.js}"></script>
+<script type="text/javascript" src="/asserts/js/feather.min.js" th:src="@{/asserts/js/feather.min.js}"></script>
 <script>
     feather.replace()
 </script>
+
+<!-- Graphs -->
+<script type="text/javascript" src="asserts/js/Chart.min.js" th:src="@{/asserts/js/Chart.min.js}"></script>
 </body>
 </html>
