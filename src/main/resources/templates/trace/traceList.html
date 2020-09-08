@@ -13,32 +13,6 @@
 
     <!-- Custom styles for this template -->
     <link href="asserts/css/dashboard.css" th:href="@{/asserts/css/dashboard.css}" rel="stylesheet">
-    <style type="text/css">
-        /* Chart.js */
-
-        @-webkit-keyframes chartjs-render-animation {
-            from {
-                opacity: 0.99
-            }
-            to {
-                opacity: 1
-            }
-        }
-
-        @keyframes chartjs-render-animation {
-            from {
-                opacity: 0.99
-            }
-            to {
-                opacity: 1
-            }
-        }
-
-        .chartjs-render-monitor {
-            -webkit-animation: chartjs-render-animation 0.001s;
-            animation: chartjs-render-animation 0.001s;
-        }
-    </style>
 </head>
 
 <body>
@@ -47,7 +21,7 @@
 <div class="container-fluid">
     <div class="row">
         <!--引入sidebar-->
-        <div th:replace="commons/bar::#sidebar(activeUri='runTraceList.html')"></div>
+        <div th:replace="commons/bar::#sidebar(activeUri='traceList.html')"></div>
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
             <h2><a class="btn btn-sm btn-success" href="emp" th:href="@{/emp}">员工添加</a></h2>
             <div class="table-responsive">
@@ -55,14 +29,28 @@
                     <thead>
                     <tr>
                         <th>id</th>
+                        <th>距离</th>
+                        <th>用时</th>
+                        <th>开放id</th>
+                        <th>学号</th>
+                        <th>ip</th>
+                        <th>打卡时间</th>
+                        <th>DTW</th>
                         <th>操作</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="trace:${run_traces}">
+                    <tr th:each="trace:${trace_data}">
                         <td th:text="${trace.id}"></td>
+                        <td th:text="${#numbers.formatDecimal(trace.distance,1,'COMMA',3,'POINT')}"></td>
+                        <td th:text="${#dates.format(trace.time_cost, '00:mm:ss')}"></td>
+                        <td th:text="${trace.open_id}"></td>
+                        <td th:text="${trace.student_id}"></td>
+                        <td th:text="${trace.ip}"></td>
+                        <td th:text="${trace.month} + '月' + ${trace.day} + '日'"></td>
+                        <td th:text="${#numbers.formatDecimal(trace.DTW,1,'COMMA',10,'POINT')}"></td>
                         <td>
-                            <a class="btn btn-sm btn-primary" th:href="@{/run_trace/} + ${trace.id}">查看地图</a>
+                            <a class="btn btn-sm btn-primary" th:href="@{/trace/} + ${trace.id}">查看地图</a>
                         </td>
                     </tr>
                     </tbody>

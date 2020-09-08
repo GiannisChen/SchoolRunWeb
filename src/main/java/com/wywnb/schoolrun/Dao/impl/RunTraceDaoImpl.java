@@ -24,16 +24,8 @@ public class RunTraceDaoImpl implements RunTraceDao {
     }
 
     @Override
-    public List<GPSPoint2V> findGPSPoint2VById(ObjectId id) {
+    public List<RunTraceEntity> findById(ObjectId id) {
         Query query = new Query(Criteria.where("id").is(id));
-        List<RunTraceEntity> list = mongoTemplate.find(query, RunTraceEntity.class);
-        List<GPSPoint2V> point2Vs = new ArrayList<>();
-
-        if(list != null && !list.isEmpty()) {
-            list.get(0).sort();
-            point2Vs = list.get(0).getGPSPoint2V();
-        }
-
-        return point2Vs;
+        return mongoTemplate.find(query, RunTraceEntity.class);
     }
 }

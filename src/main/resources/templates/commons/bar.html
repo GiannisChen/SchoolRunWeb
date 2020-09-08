@@ -45,11 +45,12 @@
                         <circle cx="20" cy="21" r="1"></circle>
                         <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
                     </svg>
-                    人工判断（临时）
+                    测试库（rt）
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" th:href="@{/students}">
+                <a class="nav-link" th:class="${activeUri=='traceList.html'?'nav-link active':'nav-link'}"
+                   th:href="@{/trace}">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                          class="feather feather-shopping-cart">
@@ -57,12 +58,12 @@
                         <circle cx="20" cy="21" r="1"></circle>
                         <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
                     </svg>
-                    学生列表
+                    测试库（trace）
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link active" href="#" th:href="@{/emps}"
-                   th:class="${activeUri=='emps'?'nav-link active':'nav-link'}">
+                <a class="nav-link active" href="#" th:href="@{/draw_trace}"
+                   th:class="${activeUri=='draw_trace.html'?'nav-link active':'nav-link'}">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                          class="feather feather-users">
@@ -71,7 +72,7 @@
                         <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
                         <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                     </svg>
-                    员工管理
+                    绘制标准路径
                 </a>
             </li>
             <li class="nav-item">
