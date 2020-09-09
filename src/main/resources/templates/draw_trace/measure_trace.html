@@ -1,0 +1,194 @@
+<!--<meta http-equiv="X-UA-Compatible" content="ie=edge">-->
+<!DOCTYPE html>
+<!-- saved from url=(0052)http://getbootstrap.com/docs/4.0/examples/dashboard/ -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Dashboard Template for Bootstrap</title>
+    <!-- Bootstrap core CSS -->
+    <link href="asserts/css/bootstrap.min.css" th:href="@{/webjars/bootstrap/4.5.2/css/bootstrap.css}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="asserts/css/dashboard.css" th:href="@{/asserts/css/dashboard.css}" rel="stylesheet">
+    <script charset="utf-8" th:src="@{https://map.qq.com/api/gljs?libraries=tools&v=1.exp&key={key}(key=#{tencent.key})}"></script>
+    <style type="text/css">
+        html,
+        body {
+            height: 100%;
+            margin: 0px;
+            padding: 0px;
+        }
+        .toolControl {
+            width: 100px;
+            position: absolute;
+            top: 20px;
+            left: 25px;
+            z-index: 1001;
+        }
+        .toolControl div {
+            width: 50px;
+            height: 25px;
+            line-height: 15px;
+            font-size: 14px;
+            padding: 4px;
+            border-radius: 3px;
+            text-align: center;
+            margin: 2px;
+            cursor: pointer;
+        }
+        .toolControl .active {
+            background-color: #548efd;
+            color: #fff;
+        }
+        .toolControl .inactive {
+            background-color: #ffffff;
+        }
+        .toolControl #measure {
+            width: 130px;
+            font-size: 12px;
+            margin-top: 0px;
+        }
+        .modal-btn {
+            height: 30px;
+            margin: 0px;
+            font-size: 14px;
+            line-height: 15px;
+        }
+        .my-modal-header {
+            padding: 10px 10px 10px 20px;
+        }
+    </style>
+</head>
+
+<body  onload="initMap()">
+<!--引入topbar-->
+<div th:replace="commons/bar::topbar"></div>
+<div class="container-fluid">
+    <div class="row">
+        <!--引入sidebar-->
+        <div th:replace="commons/bar::#sidebar(activeUri='draw_trace.html')"></div>
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <div id="container"></div>
+            <div class="toolControl">
+                <div onclick="enable(true)" id="enable" class="active">启用</div>
+                <div onclick="enable(false)" id="disable" class="inactive">禁用</div>
+                <div onclick="measure()" id="measure" class="inactive">点击这里开始测量</div>
+            </div>
+            <div>提示：推荐双击确定终点结束绘制</div>
+        </main>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header my-modal-header">
+                <h5 class="modal-title" id="myModalLabel">
+                    <svg t="1599617520139" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4599" width="30" height="30"><path d="M1002.92256 767.598L641.00256 102.802C613.40056 57.2 565.40056 29.6 512.00056 29.6s-101.4 27.6-129.002 73.202L21.07856 767.598C-6.51744 815.002-7.11944 871.402 19.88256 918.8c26.998 47.398 75.596 75.6 130.198 75.6h723.84c54.602 0 103.202-28.202 130.198-75.6 27.002-47.398 26.4-103.798-1.196-151.202z" fill="#495A79" p-id="4600"></path><path d="M1004.11856 918.8c-26.998 47.398-75.596 75.6-130.198 75.6H512.00056V29.6c53.4 0 101.4 27.602 129.002 73.202L1002.92256 767.6c27.596 47.402 28.198 103.802 1.196 151.2z" fill="#42516D" p-id="4601"></path><path d="M951.32256 798.2L589.39856 133.398C573.20256 105.8 543.80256 89.6 512.00056 89.6s-61.202 16.202-77.398 43.798L72.67856 798.2c-16.798 28.202-16.798 62.398-0.596 90.6 16.198 28.798 45.596 45.6 78 45.6h723.84c32.402 0 61.802-16.802 78-45.6 16.198-28.202 16.198-62.398-0.6-90.6z" fill="#FFDE33" p-id="4602"></path><path d="M951.92056 888.8c-16.198 28.798-45.596 45.6-78 45.6H512.00056V89.6c31.802 0 61.202 16.202 77.398 43.798L951.32256 798.2c16.798 28.202 16.798 62.398 0.598 90.6z" fill="#FFBC33" p-id="4603"></path><path d="M512.00056 874.4c-33.076 0-60-26.924-60-60s26.924-60 60-60 60 26.924 60 60-26.924 60-60 60zM572.00056 634.4c0 33.076-26.924 60-60 60s-60-26.924-60-60v-300c0-33.076 26.924-60 60-60s60 26.924 60 60v300z" fill="#495A79" p-id="4604"></path><path d="M572.00056 814.4c0-33.076-26.924-60-60-60v120c33.076 0 60-26.924 60-60zM572.00056 634.4v-300c0-33.076-26.924-60-60-60v420c33.076 0 60-26.924 60-60z" fill="#42516D" p-id="4605"></path></svg>
+                </h5>
+                <a type="button" id="close-x" class="close" aria-label="Close"><span aria-hidden="true" style="font-size: 20px">&times;</span></a>
+            </div>
+            <div class="modal-body">
+                是否提交所选路径？<br/>
+                若未选择提交关闭本对话框，选择的路径将会消失
+            </div>
+            <div class="modal-footer" style="height: 40px; padding-top: 5px; padding-bottom: 5px">
+                <a type="button" id="close-w" class="btn btn-danger modal-btn" style="margin-right: 10px">关闭</a>
+                <a type="button" id="submit-w" class="btn btn-success modal-btn" style="margin-left: 10px">提交路径</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script type="text/javascript" src="asserts/js/jquery-3.2.1.slim.min.js" th:src="@{/webjars/jquery/3.5.1/jquery.js}"></script>
+<script type="text/javascript" src="asserts/js/popper.min.js" th:src="@{/webjars/popper.js/1.11.1/dist/popper.js}"></script>
+<script type="text/javascript" src="asserts/js/bootstrap.min.js" th:src="@{/webjars/bootstrap/4.5.2/js/bootstrap.js}"></script>
+
+<!-- Icons -->
+<script type="text/javascript" src="asserts/js/feather.min.js" th:src="@{/asserts/js/feather.min.js}"></script>
+<script>
+    feather.replace()
+</script>
+<script type="text/javascript">
+    var map, measureTool, paths;
+    function initMap() {
+        // 初始化地图
+        $('#myModal').modal({backdrop: 'static', keyboard: false});
+        map = new TMap.Map("container", {
+            zoom:16, // 设置地图缩放级别
+            center: new TMap.LatLng(31.938116613805835, 118.79199706295856) // 设置地图中心点坐标
+        });
+
+        // 创建测量工具
+        measureTool = new TMap.tools.MeasureTool({
+            map: map
+        });
+    }
+
+
+    //自定义关闭
+    $("#close-x").click(function () {
+        console.log("restart");
+        $('#myModal').modal('hide');
+        initMap();
+    });
+    $("#close-w").click(function () {
+        console.log("restart");
+        $('#myModal').modal('hide');
+        initMap();
+    });
+    //自定义提交
+    $("#submit-w").click(function () {
+        console.log("submit");
+        $('#myModal').modal('hide');
+        $.ajax({
+            url: "draw_trace/add",
+            type: "POST",
+            data: paths,
+            dataType: JSON,
+            success: function() {
+                console.log("success");
+            },
+            error: function () {
+                console.log("error");
+            }
+        });
+        initMap();
+    });
+    function measure() {
+        document.getElementById('enable').className = 'active';
+        document.getElementById('measure').className = 'active';
+        document.getElementById('measure').innerText = '点击这里测量结束';
+        measureTool.measureDistance().then((res) => {
+            paths = res.path;
+            console.log(res.path);
+            console.log(res);
+            document.getElementById('enable').className = 'active';
+            document.getElementById('measure').className = 'inactive';
+            document.getElementById('measure').innerText = '点击这里开始测量';
+        });
+    }
+
+    function enable(on) {
+        if (on) {
+            measureTool.enable();
+            document.getElementById('enable').className = 'active';
+            document.getElementById('disable').className = 'inactive';
+        } else {
+            measureTool.disable();
+            document.getElementById('enable').className = 'inactive';
+            document.getElementById('disable').className = 'active';
+            document.getElementById('measure').className = 'inactive';
+        }
+    }
+</script>
+</body>
+</html>

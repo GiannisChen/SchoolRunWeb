@@ -51,12 +51,12 @@ public class LoginController {
             }
         }
 
-        @RequestMapping(value = "dashboard", method = RequestMethod.GET)
-        public String backToDashboard (HttpSession session){
-            if (session.getAttribute("loginUser") == null) {
-                return "login";
-            } else {
-                return "dashboard";
-            }
+    @RequestMapping(value = "dashboard", method = RequestMethod.GET)
+    public String backToDashboard (HttpSession session){
+        if (session.getAttribute("loginUser") == null) {
+            return "login";
+        } else {
+            return "dashboard";
         }
     }
+}

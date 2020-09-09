@@ -12,4 +12,9 @@ public class DrawTraceController {
     public String showDrawingBoard() {
         return "draw_trace/draw_trace";
     }
+
+    @RequestMapping(value = "measure", method = RequestMethod.GET)
+    public String showDrawingMeasuring() {
+        return "draw_trace/measure_trace";
+    }
 }
