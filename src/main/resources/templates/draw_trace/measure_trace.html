@@ -121,7 +121,6 @@
     var map, measureTool, paths;
     function initMap() {
         // 初始化地图
-        $('#myModal').modal({backdrop: 'static', keyboard: false});
         map = new TMap.Map("container", {
             zoom:16, // 设置地图缩放级别
             center: new TMap.LatLng(31.938116613805835, 118.79199706295856) // 设置地图中心点坐标
@@ -148,12 +147,14 @@
     //自定义提交
     $("#submit-w").click(function () {
         console.log("submit");
+        console.log(paths);
         $('#myModal').modal('hide');
         $.ajax({
             url: "draw_trace/add",
             type: "POST",
-            data: paths,
-            dataType: JSON,
+            data:JSON.stringify(paths),
+            dataType:"json",
+            contentType:"application/json",
             success: function() {
                 console.log("success");
             },
@@ -163,12 +164,14 @@
         });
         initMap();
     });
+
     function measure() {
         document.getElementById('enable').className = 'active';
         document.getElementById('measure').className = 'active';
         document.getElementById('measure').innerText = '点击这里测量结束';
         measureTool.measureDistance().then((res) => {
             paths = res.path;
+            $('#myModal').modal({backdrop: 'static', keyboard: false});
             console.log(res.path);
             console.log(res);
             document.getElementById('enable').className = 'active';
