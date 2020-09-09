@@ -132,7 +132,6 @@
         });
     }
 
-
     //自定义关闭
     $("#close-x").click(function () {
         console.log("restart");
@@ -142,7 +141,7 @@
     $("#close-w").click(function () {
         console.log("restart");
         $('#myModal').modal('hide');
-        initMap();
+        console.log(map)
     });
     //自定义提交
     $("#submit-w").click(function () {
@@ -150,7 +149,7 @@
         console.log(paths);
         $('#myModal').modal('hide');
         $.ajax({
-            url: "draw_trace/add",
+            url: "/draw_trace/add",
             type: "POST",
             data:JSON.stringify(paths),
             dataType:"json",
