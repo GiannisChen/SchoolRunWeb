@@ -14,6 +14,7 @@
 
     <!-- Custom styles for this template -->
     <link href="asserts/css/dashboard.css" th:href="@{/asserts/css/dashboard.css}" rel="stylesheet">
+    <link th:href="@{/webjars/toastr/2.1.2/build/toastr.css}" rel="stylesheet" />
     <script charset="utf-8" th:src="@{https://map.qq.com/api/gljs?libraries=tools&v=1.exp&key={key}(key=#{tencent.key})}"></script>
     <style type="text/css">
         html,
@@ -43,6 +44,11 @@
         .toolControl .active {
             background-color: #548efd;
             color: #fff;
+        }
+        .toolControl .disable {
+            background-color: #9f9f9f;
+            color: #fff;
+            pointer-events: none;
         }
         .toolControl .inactive {
             background-color: #ffffff;
@@ -111,15 +117,44 @@
 <script type="text/javascript" src="asserts/js/jquery-3.2.1.slim.min.js" th:src="@{/webjars/jquery/3.5.1/jquery.js}"></script>
 <script type="text/javascript" src="asserts/js/popper.min.js" th:src="@{/webjars/popper.js/1.11.1/dist/popper.js}"></script>
 <script type="text/javascript" src="asserts/js/bootstrap.min.js" th:src="@{/webjars/bootstrap/4.5.2/js/bootstrap.js}"></script>
-
+<script type="text/javascript" th:src="@{/webjars/toastr/2.1.2/build/toastr.min.js}"></script>
 <!-- Icons -->
 <script type="text/javascript" src="asserts/js/feather.min.js" th:src="@{/asserts/js/feather.min.js}"></script>
 <script>
     feather.replace()
 </script>
 <script type="text/javascript">
+    toastr.options = {
+        "closeButton": false,
+        "debug": false,
+        "positionClass": "toast-bottom-right",
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "3000",
+        "extendedTimeOut": "500",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    };
     var map, measureTool, paths;
     function initMap() {
+        // 初始化地图
+        map = new TMap.Map("container", {
+            zoom:16, // 设置地图缩放级别
+            center: new TMap.LatLng(31.938116613805835, 118.79199706295856) // 设置地图中心点坐标
+        });
+
+        // 创建测量工具
+        measureTool = new TMap.tools.MeasureTool({
+            map: map
+        });
+    }
+
+    function reInitMap() {
+        //销毁地图
+        map.destroy();
         // 初始化地图
         map = new TMap.Map("container", {
             zoom:16, // 设置地图缩放级别
@@ -136,12 +171,12 @@
     $("#close-x").click(function () {
         console.log("restart");
         $('#myModal').modal('hide');
-        initMap();
+        reInitMap();
     });
     $("#close-w").click(function () {
         console.log("restart");
         $('#myModal').modal('hide');
-        console.log(map)
+        reInitMap();
     });
     //自定义提交
     $("#submit-w").click(function () {
@@ -155,19 +190,21 @@
             dataType:"json",
             contentType:"application/json",
             success: function() {
+                toastr.success('提交路径成功！');
                 console.log("success");
             },
             error: function () {
+                toastr.error('提交路径失败！');
                 console.log("error");
             }
         });
-        initMap();
+        reInitMap();
     });
 
     function measure() {
         document.getElementById('enable').className = 'active';
-        document.getElementById('measure').className = 'active';
-        document.getElementById('measure').innerText = '点击这里测量结束';
+        document.getElementById('measure').className = 'disable';
+        document.getElementById('measure').innerText = '双击选点测量结束';
         measureTool.measureDistance().then((res) => {
             paths = res.path;
             $('#myModal').modal({backdrop: 'static', keyboard: false});
