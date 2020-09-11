@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Map;
 
 public interface UserInfoDao {
-    Map<String, String> insertUserInfo(UserInfoEntity user);
-    Map<String, String> deleteUserInfo(ObjectId id);
-    Map<String, String> updateUserInfo(UserInfoEntity user);
+    Map<String, String> insert(UserInfoEntity user);
+    Map<String, String> delete(ObjectId id);
+    Map<String, String> update(UserInfoEntity user);
     List<UserInfoEntity> findAll();
     List<UserInfoEntity> findByUsername(String username);
     UserInfoEntity findByID(ObjectId id);

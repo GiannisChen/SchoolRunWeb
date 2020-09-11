@@ -21,7 +21,7 @@ public class UserInfoDaoImpl implements UserInfoDao {
     private MongoTemplate mongoTemplate;
 
     @Override
-    public Map<String, String> insertUserInfo(UserInfoEntity user) {
+    public Map<String, String> insert(UserInfoEntity user) {
         Map<String, String> map = new HashMap<>();
         try {
             Object obj = mongoTemplate.save(user);
@@ -34,7 +34,7 @@ public class UserInfoDaoImpl implements UserInfoDao {
     }
 
     @Override
-    public Map<String, String> deleteUserInfo(ObjectId id) {
+    public Map<String, String> delete(ObjectId id) {
         Map<String, String> map = new HashMap<>();
         try {
             Object obj = mongoTemplate.remove(id);
@@ -47,7 +47,7 @@ public class UserInfoDaoImpl implements UserInfoDao {
     }
 
     @Override
-    public Map<String, String> updateUserInfo(UserInfoEntity user) {
+    public Map<String, String> update(UserInfoEntity user) {
         Map<String, String> map = new HashMap<>();
         try {
             Query query = new Query(Criteria.where("id").is(user.getId()));

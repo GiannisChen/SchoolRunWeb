@@ -18,4 +18,9 @@ public class GPSPoint2V {
             this.longitude = point3V.getLongitude();
         }
     }
+
+    public GPSPoint2V(GPSPointAbbr2V abbr) {
+        this.latitude = abbr.getLat();
+        this.longitude = abbr.getLng();
+    }
 }
