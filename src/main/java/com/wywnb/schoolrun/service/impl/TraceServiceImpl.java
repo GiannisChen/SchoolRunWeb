@@ -5,6 +5,7 @@ import com.wywnb.schoolrun.Entity.TraceEntity;
 import com.wywnb.schoolrun.PO.GPSPoint2V;
 import com.wywnb.schoolrun.service.TraceService;
 import org.bson.types.ObjectId;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

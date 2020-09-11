@@ -20,7 +20,6 @@ public class LoginHandlerInterceptor implements HandlerInterceptor {
         }
         else {
             //已登录
-            System.out.println(user.toString());
             return true;
         }
     }
