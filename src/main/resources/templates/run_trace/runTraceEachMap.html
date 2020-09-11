@@ -78,13 +78,46 @@
                         center: center,//设置地图中心点坐标
                     });
 
+                    //创建mareker（小车）
+                    var marker = new TMap.MultiMarker({
+                        map,
+                        styles: { //样式设置
+                            'human-down': new TMap.MarkerStyle({
+                                'width': 40,  //小车图片宽度（像素）
+                                'height': 40, //高度
+                                'anchor': {   //图片中心的像素位置（小车会保持车头朝前，会以中心位置进行转向）
+                                    x: 20,y: 20,
+                                },
+                                'faceTo': 'map',  //取’map’让小车贴于地面，faceTo取值说明请见下文图示
+                                'rotate': 180,    //初始小车朝向（正北0度，顺时针一周为360度，180为正南）
+                                'src': '../../asserts/img/person.png',   //小车图片（图中小车车头向上，即正北0度）
+                            })
+                        },
+                        geometries: [{    //小车marker的位置信息
+                            id: 'human',      //因MultiMarker支持包含多个点标记，因此要给小车一个id
+                            styleId: 'human-down',    //绑定样式
+                            position: paths[0],//初始坐标位置
+                        }]
+                    });
+
+                    //调用moveAlong，实现小车移动
+                    marker.moveAlong({
+                            "human": {    //设置让"human"沿"path"移动，速度70公里/小时
+                                path:paths,
+                                speed: 70
+                            }
+                        }, {
+                            autoRotation:true   //车头始终向前（沿路线自动旋转）
+                        }
+                    )
+
                     var polylineLayer = new TMap.MultiPolyline({
                         map: map, // 绘制到目标地图
                         // 折线样式定义
                         styles: {
                             'style_blue': new TMap.PolylineStyle({
                                 color: '#3777FF', //线填充色
-                                width: 10, //折线宽度
+                                width: 7, //折线宽度
                                 borderWidth: 0, //边线宽度
                                 showArrow: true,
                                 arrowOptions: {
