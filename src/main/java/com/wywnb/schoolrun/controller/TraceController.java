@@ -1,6 +1,8 @@
 package com.wywnb.schoolrun.controller;
 
+import com.wywnb.schoolrun.Entity.TraceEntity;
 import com.wywnb.schoolrun.PO.GPSPoint2V;
+import com.wywnb.schoolrun.PO.TraceEntityStringID;
 import com.wywnb.schoolrun.service.TraceService;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Controller;
@@ -8,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 
 import javax.annotation.Resource;
@@ -37,5 +40,11 @@ public class TraceController {
         }
         model.addAttribute("traces", list);
         return "trace/traceEachMap";
+    }
+
+    @RequestMapping(value = "getPage", method = RequestMethod.POST)
+    @ResponseBody
+    public List<TraceEntityStringID> tracePage() {
+        return traceService.findAll2StringID();
     }
 }
