@@ -8,23 +8,22 @@ import com.wywnb.schoolrun.PO.GPSPoint2V;
 import com.wywnb.schoolrun.service.TraceService;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @SpringBootTest
 class SchoolrunApplicationTests {
     @Resource
-    private TraceService traceService;
+    private RabbitTemplate rabbitTemplate;
 
     @Test
     void contextLoads() {
-        List<GPSPoint2V> list = traceService.findGPSPoint2VById(new ObjectId("5f44b7838a01a678171c1d10"));
-
-        for(GPSPoint2V trace : list) {
-            System.out.println(trace);
-        }
 
     }
 }
