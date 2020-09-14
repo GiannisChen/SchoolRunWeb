@@ -26,6 +26,7 @@ public class TraceEntity {
     private Integer month;
     private Integer day;
     private Double DTW;
+    private String base_id;
 
     public static final int ASC = 1;
     public static final int DESC = 2;

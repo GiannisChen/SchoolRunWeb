@@ -20,6 +20,7 @@ public class TraceEntityStringID {
     private String ip;
     private String date;
     private Double DTW;
+    private String base_id;
 
     public TraceEntityStringID(TraceEntity trace) {
         this.id = trace.getId().toHexString();
@@ -30,6 +31,7 @@ public class TraceEntityStringID {
         this.student_id = trace.getStudent_id();
         this.ip = trace.getIp();
         this.DTW = trace.getDTW();
+        this.base_id = trace.getBase_id();
         StringBuffer date = new StringBuffer();
         if(trace.getMonth() < 10) {
             date.append("0");

@@ -208,8 +208,6 @@
         measureTool.measureDistance().then((res) => {
             paths = res.path;
             $('#myModal').modal({backdrop: 'static', keyboard: false});
-            console.log(res.path);
-            console.log(res);
             document.getElementById('enable').className = 'active';
             document.getElementById('measure').className = 'inactive';
             document.getElementById('measure').innerText = '点击这里开始测量';

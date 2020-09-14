@@ -2,12 +2,16 @@ package com.wywnb.schoolrun.Dao.impl;
 
 import com.wywnb.schoolrun.Dao.BaseTraceDao;
 import com.wywnb.schoolrun.Entity.BaseTraceEntity;
+import com.wywnb.schoolrun.Entity.TraceEntity;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -28,6 +32,12 @@ public class BaseTraceDaoImpl implements BaseTraceDao {
             map.put("error", "插入出错！");
         }
         return map;
+    }
+
+    @Override
+    public List<BaseTraceEntity> findById(ObjectId id) {
+        Query query = new Query(Criteria.where("id").is(id));
+        return mongoTemplate.find(query, BaseTraceEntity.class);
     }
 
     @Override

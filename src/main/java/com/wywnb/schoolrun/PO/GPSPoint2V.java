@@ -23,4 +23,6 @@ public class GPSPoint2V {
         this.latitude = abbr.getLat();
         this.longitude = abbr.getLng();
     }
+
+    public GPSPoint2V() {}
 }

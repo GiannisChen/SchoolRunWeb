@@ -120,7 +120,7 @@
     //删除、编辑操作
     function operation(value, row, index) {
         var htm = "<a class=\"btn btn-sm btn-primary\" href=\"/trace/" + row.id + "\">查看地图</a>";
-        htm += "<a class=\"btn btn-sm btn-primary\" href=\"/trace/compare" + row.id + "\">基准比较</a>"
+        htm += "<a class=\"btn btn-sm btn-primary\"  style=\"margin-left:10px;\" href=\"/trace/compare/" + row.id + "/" + row.base_id + "\">基准比较</a>"
         return htm;
     }
     function detail(value, row, index) {

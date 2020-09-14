@@ -2,7 +2,9 @@ package com.wywnb.schoolrun.controller;
 
 import com.wywnb.schoolrun.Entity.TraceEntity;
 import com.wywnb.schoolrun.PO.GPSPoint2V;
+import com.wywnb.schoolrun.PO.GPSPointAbbr2V;
 import com.wywnb.schoolrun.PO.TraceEntityStringID;
+import com.wywnb.schoolrun.service.BaseTraceService;
 import com.wywnb.schoolrun.service.TraceService;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Controller;
@@ -23,6 +25,8 @@ import java.util.Map;
 public class TraceController {
     @Resource
     private TraceService traceService;
+    @Resource
+    private BaseTraceService baseTraceService;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String traceTable(Model model) {
@@ -46,5 +50,29 @@ public class TraceController {
     @ResponseBody
     public List<TraceEntityStringID> tracePage() {
         return traceService.findAll2StringID();
+    }
+
+    @RequestMapping(value = "compare/{id}/{base_id}", method = RequestMethod.GET)
+    public String compare(@PathVariable("id") ObjectId id,
+                          @PathVariable("base_id") ObjectId base_id,
+                          Model model, Map<String, Object> map) {
+        if (id != null && base_id != null) {
+            System.out.println(id.toHexString());
+            System.out.println(base_id.toHexString());
+            List<GPSPoint2V> traceList = traceService.findGPSPoint2VById(id);
+            List<GPSPoint2V> baseList = baseTraceService.findGPSPoint2VById(base_id);
+            if(traceList == null || traceList.isEmpty() || baseList == null || baseList.isEmpty()) {
+                map.put("msg", "数据不全！");
+            }
+            else {
+                map.put("success", "成功！");
+                model.addAttribute("trace_list", traceList);
+                model.addAttribute("base_list", baseList);
+            }
+        }
+        else {
+            map.put("msg", "id为空！");
+        }
+        return "trace/traceCompare";
     }
 }

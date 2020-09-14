@@ -54,16 +54,21 @@
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
             <div id="container"></div>
             <script type="text/javascript" th:inline="javascript">
-                var traces = [[${traces}]]
-                var paths = []
-                for(var i = 0; i < traces.length; i++) {
-                    paths.push(new TMap.LatLng(traces[i].latitude, traces[i].longitude))
+                var trace_list = [[${trace_list}]];
+                var base_list = [[${base_list}]];
+                var trace_paths = [], base_paths = [];
+                for(var i = 0; i < trace_list.length; i++) {
+                    trace_paths.push(new TMap.LatLng(trace_list[i].latitude, trace_list[i].longitude));
                 }
+                for(var i = 0; i < base_list.length; i++) {
+                    base_paths.push(new TMap.LatLng(base_list[i].latitude, base_list[i].longitude));
+                }
+                console.log("test");
+                console.log(trace_paths);
+                console.log(base_paths);
                 var map;
-
-
                 function initMap() {
-                    var center = paths[0]
+                    var center = trace_paths[0]
                     //初始化地图
                     map = new TMap.Map("container", {
                         zoom: 17,//设置地图缩放级别
@@ -85,15 +90,19 @@
                                 lineCap: 'round',
                             }),
                         },
-                        geometries: [{
-                            styleId: 'style_blue',
-                            rainbowPaths: [ // 彩虹线数组
-                                {
-                                    path: paths,
-                                    color: 'rgba(0, 180, 0, 1)',
-                                }
-                            ],
-                        }],
+                        geometries: [
+                            {
+                                styleId: 'style_blue',
+                                rainbowPaths: [ // 彩虹线数组
+                                    {
+                                        path: trace_paths,
+                                        color: 'rgba(0, 180, 0, 1)',
+                                    }, {
+                                        path: base_paths,
+                                        color: 'rgba(255, 200, 0, 1)',
+                                    }
+                                ],
+                            }]
                     });
                 }
             </script>

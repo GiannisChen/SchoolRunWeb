@@ -6,7 +6,7 @@ import lombok.Data;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -16,7 +16,7 @@ public class BaseTraceEntity {
 
     private ObjectId id;
     private String author;
-    private Timestamp createTime;
+    private Date createTime;
     private List<GPSPoint2V> trace;
 
     public BaseTraceEntity(List<GPSPointAbbr2V> trace, String username) {
@@ -26,4 +26,5 @@ public class BaseTraceEntity {
             this.trace.add(new GPSPoint2V(point));
         }
     }
+    public BaseTraceEntity() {}
 }
