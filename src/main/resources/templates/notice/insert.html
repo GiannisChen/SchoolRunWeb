@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<!-- saved from url=(0052)http://getbootstrap.com/docs/4.0/examples/dashboard/ -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Dashboard Template for Bootstrap</title>
+    <!-- Bootstrap core CSS -->
+    <link href="asserts/css/bootstrap.min.css" th:href="@{/webjars/bootstrap/4.5.2/css/bootstrap.css}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="asserts/css/dashboard.css" th:href="@{/asserts/css/dashboard.css}" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/asserts/css/editormd.min.css}"/>
+    <link th:href="@{/webjars/toastr/2.1.2/build/toastr.css}" rel="stylesheet"/>
+    <style type="text/css">
+        /* Chart.js */
+
+        @-webkit-keyframes chartjs-render-animation {
+            from {
+                opacity: 0.99
+            }
+            to {
+                opacity: 1
+            }
+        }
+
+        @keyframes chartjs-render-animation {
+            from {
+                opacity: 0.99
+            }
+            to {
+                opacity: 1
+            }
+        }
+
+        .chartjs-render-monitor {
+            -webkit-animation: chartjs-render-animation 0.001s;
+            animation: chartjs-render-animation 0.001s;
+        }
+    </style>
+</head>
+
+<body>
+<!--引入topbar-->
+<div th:replace="commons/bar::topbar"></div>
+<div class="container-fluid">
+    <div class="row">
+        <!--引入sidebar-->
+        <div th:replace="commons/bar::#sidebar(activeUri='noticeList.html')"></div>
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <form id="form" th:action="@{/notice/insert}" method="post">
+                <div class="form-group">
+                    <label for="titleInput">公告标题</label>
+                    <input type="text" name="title" class="form-control" id="titleInput" placeholder="公告" required="">
+                </div>
+                <div class="form-group">
+                    <label for="editor">公告内容</label>
+                    <div id="editor">
+                        <!-- Tips: Editor.md can auto append a `<textarea>` tag -->
+                        <textarea id="content" name="content" style="display:none;"></textarea>
+                    </div>
+                </div>
+                <div style="text-align: center">
+                    <a type="button" class="btn btn-sm btn-primary"
+                       style="width: 120px; margin-bottom: 30px; margin-right: 20px" href="/notice/">返回</a>
+                    <a type="button" onclick="submit()" class="btn btn-sm btn-success"
+                       style="width: 120px; margin-bottom: 30px">提交</a>
+                </div>
+            </form>
+        </main>
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script type="text/javascript" src="asserts/js/jquery-3.2.1.slim.min.js"
+        th:src="@{/webjars/jquery/3.5.1/jquery.js}"></script>
+<script type="text/javascript" src="asserts/js/popper.min.js"
+        th:src="@{/webjars/popper.js/1.11.1/dist/popper.js}"></script>
+<script type="text/javascript" src="asserts/js/bootstrap.min.js"
+        th:src="@{/webjars/bootstrap/4.5.2/js/bootstrap.js}"></script>
+<script th:src="@{/asserts/js/editormd.min.js}"></script>
+<script type="text/javascript" th:src="@{/webjars/toastr/2.1.2/build/toastr.min.js}"></script>
+<!-- Icons -->
+<script type="text/javascript" src="asserts/js/feather.min.js" th:src="@{/asserts/js/feather.min.js}"></script>
+<script>
+    feather.replace()
+</script>
+<script type="text/javascript">
+    //markdown
+    $(function () {
+        var editor = editormd("editor", {
+            width: "100%",
+            height: "480px",
+            markdown: "#公告",     // dynamic set Markdown text
+            path: "/asserts/lib/"  // Autoload modules mode, codemirror, marked... dependents libs path
+        });
+    });
+
+    //submit
+    function submit() {
+        //init toastr
+        toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "positionClass": "toast-bottom-right",
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "3000",
+            "extendedTimeOut": "500",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+
+        var title = document.getElementById("titleInput");
+        var content = document.getElementById("content");
+        if (title.value == null || title.value == '') {
+            toastr.error('公告标题不能为空！');
+            title.focus();
+        }
+        else if (content.value == null || content.value == '') {
+            toastr.error('公告内容不能为空！');
+            content.focus();
+        }
+        else {
+            $.ajax({
+                //几个参数需要注意一下
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: "/notice/insert",//url
+                data: $('#form').serialize(),
+                success: function (res) {
+                    toastr.success("调教成功，将返回上一页！");
+                    setTimeout(function () {
+                        window.location.replace("/notice");
+                    }, 2000);
+                },
+                error: function () {
+                    toastr.error('提交公告失败！');
+                }
+            });
+        }
+    }
+</script>
+</body>
+</html>
