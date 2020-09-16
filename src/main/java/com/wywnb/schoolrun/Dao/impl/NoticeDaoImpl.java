@@ -50,8 +50,7 @@ public class NoticeDaoImpl implements NoticeDao {
             update.set("title", title);
             update.set("content", content);
             update.set("creatTime", Calendar.getInstance().getTime());
-
-            mongoTemplate.updateFirst(query, update, UserInfoEntity.class);
+            mongoTemplate.updateFirst(query, update, NoticeEntity.class);
             map.put("success", "Ok");
         }
         catch (Exception e) {
@@ -69,10 +68,7 @@ public class NoticeDaoImpl implements NoticeDao {
             Update update = new Update();
             update.set("isValid", isValid);
             update.set("creatTime", Calendar.getInstance().getTime());
-            UpdateResult result = mongoTemplate.updateFirst(query, update, NoticeEntity.class);
-            System.out.println(result.getMatchedCount());
-            System.out.println(result.getModifiedCount());
-            System.out.println(result.getUpsertedId());
+            mongoTemplate.updateFirst(query, update, NoticeEntity.class);
             map.put("success", "Ok");
         }
         catch (Exception e) {
@@ -82,8 +78,17 @@ public class NoticeDaoImpl implements NoticeDao {
     }
 
     @Override
-    public Map<String, String> delete(NoticeEntity notice) {
-        return null;
+    public Map<String, String> delete(ObjectId id) {
+        Map<String, String> map = new HashMap<>();
+        Query query = new Query(Criteria.where("id").is(id));
+        try {
+            mongoTemplate.remove(query, NoticeEntity.class);
+            map.put("success", "Ok");
+        }
+        catch (Exception e) {
+            map.put("msg", "update error");
+        }
+        return map;
     }
 
     @Override

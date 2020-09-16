@@ -11,6 +11,6 @@ public interface NoticeDao {
     List<NoticeEntity> findAll();
     Map<String, String> update(ObjectId id, String title, String content);
     Map<String, String> update(ObjectId id, boolean isValid);
-    Map<String, String> delete(NoticeEntity notice);
+    Map<String, String> delete(ObjectId id);
     List<NoticeEntity> findByID(ObjectId id);
 }

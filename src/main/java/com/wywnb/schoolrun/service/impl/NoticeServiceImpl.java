@@ -53,4 +53,9 @@ public class NoticeServiceImpl implements NoticeService {
     public Map<String, String> update(ObjectId id, boolean isValid) {
         return noticeDao.update(id, isValid);
     }
+
+    @Override
+    public Map<String, String> delete(ObjectId id) {
+        return noticeDao.delete(id);
+    }
 }

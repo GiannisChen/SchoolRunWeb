@@ -27,6 +27,6 @@ class SchoolrunApplicationTests {
 
     @Test
     void contextLoads() {
-        noticeDao.update(new ObjectId("5f60586eb7c7864a8f1cf068"), true);
+        noticeDao.update(new ObjectId("5f616879a2c4ec5b89127990"), "test", "test");
     }
 }

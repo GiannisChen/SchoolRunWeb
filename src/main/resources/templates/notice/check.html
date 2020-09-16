@@ -51,7 +51,7 @@
         <!--引入sidebar-->
         <div th:replace="commons/bar::#sidebar(activeUri='noticeList.html')"></div>
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-            <form id="form" th:action="@{/notice/insert}" method="post">
+            <form id="form" method="post">
                 <div class="form-group">
                     <label for="titleInput">公告标题</label>
                     <input type="text" name="title" class="form-control" id="titleInput" placeholder="公告" required="">
@@ -66,8 +66,8 @@
                 <div style="text-align: center">
                     <a type="button" class="btn btn-sm btn-primary"
                        style="width: 120px; margin-bottom: 30px; margin-right: 20px" href="/notice">返回</a>
-                    <button type="button" onclick="submit()" class="btn btn-sm btn-success" id="update"
-                       style="width: 120px; margin-bottom: 30px">提交修改</button>
+                    <a type="button" onclick="mySubmit()" class="btn btn-sm btn-success" id="update"
+                       style="width: 120px; margin-bottom: 30px">提交修改</a>
                 </div>
             </form>
         </main>
@@ -136,7 +136,7 @@
     }
 
     //submit
-    function submit() {
+    function mySubmit() {
         //init toastr
         toastr.options = {
             "closeButton": false,
@@ -164,11 +164,12 @@
             content.focus();
         }
         else {
+            console.log("in ajax");
             $.ajax({
                 //几个参数需要注意一下
                 type: "POST",//方法类型
                 dataType: "json",//预期服务器返回的数据类型
-                url: "/notice/update/" + notice.id,//url
+                url: "/notice/check/update/" + notice.id,//url
                 data: $('#form').serialize(),
                 success: function (res) {
                     toastr.success("提交成功，将返回上一页！");

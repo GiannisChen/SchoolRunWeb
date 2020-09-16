@@ -13,4 +13,5 @@ public interface NoticeService {
     NoticeEntityStringID findByID(String id);
     Map<String, String> update(ObjectId id, String title, String content);
     Map<String, String> update(ObjectId id, boolean isValid);
+    Map<String, String> delete(ObjectId id);
 }

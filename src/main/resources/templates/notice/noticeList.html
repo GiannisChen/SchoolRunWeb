@@ -161,7 +161,7 @@
         else {
             htm += "<a class=\"btn btn-sm btn-success\"  style=\"margin-left:10px;\" onclick=\"up('" + row.id + "')\">上架</a>";
         }
-        htm += "<a class=\"btn btn-sm btn-danger\"  style=\"margin-left:10px;\" href=\"/notice/delete/" + row.id + "\">删除</a>";
+        htm += "<a class=\"btn btn-sm btn-danger\"  style=\"margin-left:10px;\" onclick=\"kill('" + row.id + "')\">删除</a>";
         return htm;
     }
 
@@ -217,6 +217,22 @@
             },
             error: function () {
                 toastr.error('状态改变失败！');
+            }
+        });
+    }
+    function kill(id) {
+        console.log(id);
+        $.ajax({
+            //几个参数需要注意一下
+            type: "GET",//方法类型
+            dataType: "json",//预期服务器返回的数据类型
+            url: "/notice/delete/" + id,//url
+            success: function (res) {
+                toastr.success("删除公告成功！");
+                $('#notices').bootstrapTable('refresh');
+            },
+            error: function () {
+                toastr.error('删除公告失败！');
             }
         });
     }
