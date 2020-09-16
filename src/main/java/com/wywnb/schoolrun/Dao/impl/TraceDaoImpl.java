@@ -1,6 +1,7 @@
 package com.wywnb.schoolrun.Dao.impl;
 
 import com.wywnb.schoolrun.Dao.TraceDao;
+import com.wywnb.schoolrun.Entity.NoticeEntity;
 import com.wywnb.schoolrun.Entity.RunTraceEntity;
 import com.wywnb.schoolrun.Entity.TraceEntity;
 import com.wywnb.schoolrun.PO.GPSPoint2V;
@@ -11,7 +12,9 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class TraceDaoImpl implements TraceDao {
@@ -37,5 +40,19 @@ public class TraceDaoImpl implements TraceDao {
     public Long getAllByStudentId(Integer studentId) {
         Query query = new Query(Criteria.where("student_id").is(studentId));
         return mongoTemplate.count(query, TraceEntity.class);
+    }
+
+    @Override
+    public Map<String, String> delete(ObjectId id) {
+        Map<String, String> map = new HashMap<>();
+        Query query = new Query(Criteria.where("id").is(id));
+        try {
+            mongoTemplate.remove(query, TraceEntity.class);
+            map.put("success", "Ok");
+        }
+        catch (Exception e) {
+            map.put("msg", "delete error");
+        }
+        return map;
     }
 }

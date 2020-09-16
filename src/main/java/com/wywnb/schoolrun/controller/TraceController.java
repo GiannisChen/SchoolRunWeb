@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -74,5 +75,18 @@ public class TraceController {
             map.put("msg", "id为空！");
         }
         return "trace/traceCompare";
+    }
+
+    @RequestMapping(value = "delete/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String, Object> delete(@PathVariable(value = "id") String id) {
+        Map<String, Object> map = new HashMap<>();
+        if(id != null && !id.isEmpty()) {
+            map.putAll(traceService.delete(new ObjectId(id)));
+        }
+        else {
+            map.put("error", "传入数据有误！");
+        }
+        return map;
     }
 }

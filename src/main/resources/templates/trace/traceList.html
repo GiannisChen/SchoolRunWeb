@@ -14,6 +14,7 @@
     <!-- Custom styles for this template -->
     <link href="asserts/css/dashboard.css" th:href="@{/asserts/css/dashboard.css}" rel="stylesheet">
     <link th:href="@{/webjars/bootstrap-table/1.17.1/dist/bootstrap-table.css}" rel="stylesheet">
+    <link th:href="@{/webjars/toastr/2.1.2/build/toastr.css}" rel="stylesheet"/>
 </head>
 
 <body>
@@ -37,6 +38,7 @@
 <script type="text/javascript" src="asserts/js/bootstrap.min.js" th:src="@{/webjars/bootstrap/4.5.2/js/bootstrap.js}"></script>
 <script type="text/javascript" th:src="@{/webjars/bootstrap-table/1.17.1/dist/bootstrap-table.js}"></script>
 <script type="text/javascript" th:src="@{/webjars/bootstrap-table/1.17.1/dist/locale/bootstrap-table-zh-CN.js}"></script>
+<script type="text/javascript" th:src="@{/webjars/toastr/2.1.2/build/toastr.min.js}"></script>
 <!-- Icons -->
 <script type="text/javascript" src="asserts/js/feather.min.js" th:src="@{/asserts/js/feather.min.js}"></script>
 <script type="module" th:src="@{/webjars/tooltip.js/1.3.3/dist/tooltip.js}"></script>
@@ -120,7 +122,8 @@
     //删除、编辑操作
     function operation(value, row, index) {
         var htm = "<a class=\"btn btn-sm btn-primary\" href=\"/trace/" + row.id + "\">查看地图</a>";
-        htm += "<a class=\"btn btn-sm btn-primary\"  style=\"margin-left:10px;\" href=\"/trace/compare/" + row.id + "/" + row.base_id + "\">基准比较</a>"
+        htm += "<a class=\"btn btn-sm btn-primary\"  style=\"margin-left:10px;\" href=\"/trace/compare/" + row.id + "/" + row.base_id + "\">基准比较</a>";
+        htm += "<a class=\"btn btn-sm btn-danger\"  style=\"margin-left:10px;\" onclick=\"kill('" + row.id + "')\">删除</a>";
         return htm;
     }
     function detail(value, row, index) {
@@ -149,6 +152,37 @@
         for (var k in o)
             if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
         return fmt;
+    }
+
+    function kill(id) {
+        //init toastr
+        toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "positionClass": "toast-bottom-right",
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "3000",
+            "extendedTimeOut": "500",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+        $.ajax({
+            //几个参数需要注意一下
+            type: "GET",//方法类型
+            dataType: "json",//预期服务器返回的数据类型
+            url: "/trace/delete/" + id,//url
+            success: function (res) {
+                toastr.success("删除路径成功！");
+                $('#trace-page').bootstrapTable('refresh');
+            },
+            error: function () {
+                toastr.error('删除路径失败！');
+            }
+        });
     }
 
 </script>

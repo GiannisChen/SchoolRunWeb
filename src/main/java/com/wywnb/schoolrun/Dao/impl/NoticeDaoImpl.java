@@ -86,7 +86,7 @@ public class NoticeDaoImpl implements NoticeDao {
             map.put("success", "Ok");
         }
         catch (Exception e) {
-            map.put("msg", "update error");
+            map.put("msg", "delete error");
         }
         return map;
     }

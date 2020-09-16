@@ -11,7 +11,7 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
-@Document(collection = "trace")
+@Document(collection = "Trace")
 @Data
 public class TraceEntity {
 
@@ -23,8 +23,7 @@ public class TraceEntity {
     private String open_id;
     private Integer student_id;
     private String ip;
-    private Integer month;
-    private Integer day;
+    private Long post_time;
     private Double DTW;
     private String base_id;
 

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class TraceServiceImpl implements TraceService {
@@ -45,5 +46,10 @@ public class TraceServiceImpl implements TraceService {
             return trace.getGPSPoint2V();
         }
         return null;
+    }
+
+    @Override
+    public Map<String, String> delete(ObjectId id) {
+        return traceDao.delete(id);
     }
 }

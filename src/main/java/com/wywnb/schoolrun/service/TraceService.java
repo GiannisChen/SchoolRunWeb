@@ -7,6 +7,7 @@ import com.wywnb.schoolrun.PO.TraceEntityStringID;
 import org.bson.types.ObjectId;
 
 import java.util.List;
+import java.util.Map;
 
 public interface TraceService {
     List<TraceEntity> findAll();
@@ -14,4 +15,6 @@ public interface TraceService {
     List<TraceEntityStringID> findAll2StringID();
 
     List<GPSPoint2V> findGPSPoint2VById(ObjectId id);
+
+    Map<String, String> delete(ObjectId id);
 }
