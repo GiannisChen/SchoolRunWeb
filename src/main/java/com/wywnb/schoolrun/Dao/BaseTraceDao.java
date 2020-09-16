@@ -12,4 +12,5 @@ public interface BaseTraceDao {
     Map<String, String> insert(BaseTraceEntity trace);
     List<BaseTraceEntity> findById(ObjectId id);
     Map<String, String> delete(ObjectId id);
+    List<BaseTraceEntity> findAll();
 }

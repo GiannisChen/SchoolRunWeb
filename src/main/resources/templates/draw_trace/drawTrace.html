@@ -76,7 +76,7 @@
 <div class="container-fluid">
     <div class="row">
         <!--引入sidebar-->
-        <div th:replace="commons/bar::#sidebar(activeUri='drawTrace.html')"></div>
+        <div th:replace="commons/bar::#sidebar(activeUri='baseTraceList.html')"></div>
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
             <div id="container"></div>
             <div class="toolControl">
@@ -191,11 +191,12 @@
             contentType:"application/json",
             success: function() {
                 toastr.success('提交路径成功！');
-                console.log("success");
+                setTimeout(function () {
+                    window.location.replace("/base_trace");
+                }, 2000);
             },
             error: function () {
                 toastr.error('提交路径失败！');
-                console.log("error");
             }
         });
         reInitMap();

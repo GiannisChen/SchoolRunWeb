@@ -66,8 +66,8 @@
                 <div style="text-align: center">
                     <a type="button" class="btn btn-sm btn-primary"
                        style="width: 120px; margin-bottom: 30px; margin-right: 20px" href="/notice">返回</a>
-                    <a type="button" onclick="mySubmit()" class="btn btn-sm btn-success" id="update"
-                       style="width: 120px; margin-bottom: 30px">提交修改</a>
+                    <button type="button" onclick="mySubmit()" class="btn btn-sm btn-success" id="update"
+                       style="width: 120px; margin-bottom: 30px">提交修改</button>
                 </div>
             </form>
         </main>
@@ -195,14 +195,14 @@
     $("#close-x").click(function () {
         title.readOnly = true;
         content.readOnly = true;
-        update.disabled = true;
+        update.disabled = "disabled";
         mdRO();
         $('#myModal').modal('hide');
     });
     $("#close-ro").click(function () {
         title.readOnly = true;
         content.readOnly = true;
-        update.disabled = true;
+        update.disabled = "disabled";
         mdRO();
         $('#myModal').modal('hide');
     });

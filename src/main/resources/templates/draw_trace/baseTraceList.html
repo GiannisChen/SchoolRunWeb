@@ -1,10 +1,144 @@
 <!DOCTYPE html>
-<html lang="en">
+<!-- saved from url=(0052)http://getbootstrap.com/docs/4.0/examples/dashboard/ -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
+    <title>Dashboard Template for Bootstrap</title>
+    <!-- Bootstrap core CSS -->
+    <link href="asserts/css/bootstrap.min.css" th:href="@{/webjars/bootstrap/4.5.2/css/bootstrap.css}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="asserts/css/dashboard.css" th:href="@{/asserts/css/dashboard.css}" rel="stylesheet">
+    <link th:href="@{/webjars/bootstrap-table/1.17.1/dist/bootstrap-table.css}" rel="stylesheet">
+    <link th:href="@{/webjars/toastr/2.1.2/build/toastr.css}" rel="stylesheet"/>
+</head>
+
+<body>
+<!--引入topbar-->
+<div th:replace="commons/bar::topbar"></div>
+<div class="container-fluid">
+    <div class="row">
+        <!--引入sidebar-->
+        <div th:replace="commons/bar::#sidebar(activeUri='baseTraceList.html')"></div>
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <h2><a class="btn btn-sm btn-success" href="draw_trace">添加标准轨迹</a></h2>
+            <table id="trace-page"></table>
+        </main>
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script type="text/javascript" src="asserts/js/jquery-3.2.1.slim.min.js" th:src="@{/webjars/jquery/3.5.1/jquery.js}"></script>
+<script type="text/javascript" src="asserts/js/popper.min.js"></script>
+<script type="text/javascript" src="asserts/js/bootstrap.min.js" th:src="@{/webjars/bootstrap/4.5.2/js/bootstrap.js}"></script>
+<script type="text/javascript" th:src="@{/webjars/bootstrap-table/1.17.1/dist/bootstrap-table.js}"></script>
+<script type="text/javascript" th:src="@{/webjars/bootstrap-table/1.17.1/dist/locale/bootstrap-table-zh-CN.js}"></script>
+<script type="text/javascript" th:src="@{/webjars/toastr/2.1.2/build/toastr.min.js}"></script>
+<!-- Icons -->
+<script type="text/javascript" src="asserts/js/feather.min.js" th:src="@{/asserts/js/feather.min.js}"></script>
+<script type="module" th:src="@{/webjars/tooltip.js/1.3.3/dist/tooltip.js}"></script>
+<script>
+    feather.replace();
+</script>
+<script>
+    $('#trace-page').bootstrapTable({
+        method : 'post',
+        url : "base_trace/getPage",//请求路径
+        striped : true, //是否显示行间隔色
+        pageNumber : 1, //初始化加载第一页
+        pagination : true,//是否分页
+        sidePagination : 'client',//server:服务器端分页|client：前端分页
+        pageSize : 7,//单页记录数
+        pageList : [],//可选择单页记录数
+        showRefresh : false,//刷新按钮
+        search: false, //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+        silent: true,
+        showToggle: false,
+        minimumCountColumns: 7,
+        columns: [{
+            field: 'index',
+            title: '序号',
+            align: 'center',
+            formatter: function (value, row, index) {
+                return index + 1;
+            }
+        }, {
+            field: 'author',
+            title: '绘制者'
+        }, {
+            field: 'creatTime',
+            title: '创建时间',
+            formatter: function (s) {
+                return new Date(s).Format("yyyy-MM-dd");
+            }
+        }, {
+            field: 'operation',
+            title: '操作',
+            align: 'center',
+            formatter: operation,//对资源进行操作
+        }]
+    })
+
+    //删除、编辑操作
+    function operation(value, row, index) {
+        var htm = "<a class=\"btn btn-sm btn-primary\" href=\"/base_trace/" + row.id + "\">查看标准轨迹</a>";
+        htm += "<button id='del' class=\"btn btn-sm btn-danger\"  style=\"margin-left:10px;\" onclick=\"kill('" + row.id + "')\" disabled='disabled'>删除</button>";
+        return htm;
+    }
+
+    Date.prototype.Format = function (fmt) {
+        var o = {
+            "M+": this.getMonth() + 1, //月份
+            "d+": this.getDate(), //日
+            "H+": this.getHours(), //小时
+            "m+": this.getMinutes(), //分
+            "s+": this.getSeconds(), //秒
+            "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+            "S": this.getMilliseconds() //毫秒
+        };
+        if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+        for (var k in o)
+            if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+        return fmt;
+    }
+
+    function kill(id) {
+        //init toastr
+        toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "positionClass": "toast-bottom-right",
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "3000",
+            "extendedTimeOut": "500",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+        $.ajax({
+            //几个参数需要注意一下
+            type: "GET",//方法类型
+            dataType: "json",//预期服务器返回的数据类型
+            url: "/base_trace/delete/" + id,//url
+            success: function (res) {
+                toastr.success("删除路径成功！");
+                $('#trace-page').bootstrapTable('refresh');
+            },
+            error: function () {
+                toastr.error('删除路径失败！');
+            }
+        });
+    }
+
+</script>
 </body>
 </html>

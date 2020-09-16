@@ -3,6 +3,7 @@ package com.wywnb.schoolrun.service.impl;
 import com.wywnb.schoolrun.Dao.BaseTraceDao;
 import com.wywnb.schoolrun.Entity.BaseTraceEntity;
 import com.wywnb.schoolrun.Entity.TraceEntity;
+import com.wywnb.schoolrun.PO.BaseTraceEntityStringID;
 import com.wywnb.schoolrun.PO.GPSPoint2V;
 import com.wywnb.schoolrun.PO.GPSPointAbbr2V;
 import com.wywnb.schoolrun.service.BaseTraceService;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -40,5 +42,17 @@ public class BaseTraceServiceImpl implements BaseTraceService {
             return traceList.get(0).getTrace();
         }
         return null;
+    }
+
+    @Override
+    public List<BaseTraceEntityStringID> findAll2StringID() {
+        List<BaseTraceEntity> oldList = baseTraceDao.findAll();
+        List<BaseTraceEntityStringID> newList = new LinkedList<>();
+        if(oldList != null && !oldList.isEmpty()) {
+            for(BaseTraceEntity temp : oldList) {
+                newList.add(new BaseTraceEntityStringID(temp));
+            }
+        }
+        return newList;
     }
 }

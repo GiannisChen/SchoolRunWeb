@@ -30,8 +30,7 @@ public class TraceController {
     private BaseTraceService baseTraceService;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public String traceTable(Model model) {
-        model.addAttribute("trace_data", traceService.findAll());
+    public String traceTable() {
         return "trace/traceList";
     }
 

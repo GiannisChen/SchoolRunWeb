@@ -42,15 +42,20 @@ public class BaseTraceDaoImpl implements BaseTraceDao {
 
     @Override
     public Map<String, String> delete(ObjectId id) {
-
         Map<String, String> map = new HashMap<>();
+        Query query = new Query(Criteria.where("id").is(id));
         try {
-            Object obj = mongoTemplate.remove(id);
-            map.put("success", "OK");
+            mongoTemplate.remove(query, BaseTraceEntity.class);
+            map.put("success", "Ok");
         }
         catch (Exception e) {
             map.put("msg", "delete error");
         }
         return map;
+    }
+
+    @Override
+    public List<BaseTraceEntity> findAll() {
+        return mongoTemplate.findAll(BaseTraceEntity.class);
     }
 }

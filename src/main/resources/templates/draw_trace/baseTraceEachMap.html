@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<!-- saved from url=(0052)http://getbootstrap.com/docs/4.0/examples/dashboard/ -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>Dashboard Template for Bootstrap</title>
+    <!-- Bootstrap core CSS -->
+    <link href="asserts/css/bootstrap.min.css" th:href="@{/webjars/bootstrap/4.5.2/css/bootstrap.css}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="asserts/css/dashboard.css" th:href="@{/asserts/css/dashboard.css}" rel="stylesheet">
+    <style type="text/css">
+        /* Chart.js */
+
+        @-webkit-keyframes chartjs-render-animation {
+            from {
+                opacity: 0.99
+            }
+            to {
+                opacity: 1
+            }
+        }
+
+        @keyframes chartjs-render-animation {
+            from {
+                opacity: 0.99
+            }
+            to {
+                opacity: 1
+            }
+        }
+
+        .chartjs-render-monitor {
+            -webkit-animation: chartjs-render-animation 0.001s;
+            animation: chartjs-render-animation 0.001s;
+        }
+    </style>
+    <script charset="utf-8" th:src="@{https://map.qq.com/api/gljs?v=1.exp&key={key}(key=#{tencent.key})}"></script>
+</head>
+
+<body onload="initMap()">
+<!--引入topbar-->
+<div th:replace="commons/bar::topbar"></div>
+<div class="container-fluid">
+    <div class="row">
+        <!--引入sidebar-->
+        <div th:replace="commons/bar::#sidebar(activeUri='baseTraceList.html')"></div>
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <div id="container"></div>
+            <script type="text/javascript" th:inline="javascript">
+                var traces = [[${traces}]]
+                var paths = []
+                for(var i = 0; i < traces.length; i++) {
+                    paths.push(new TMap.LatLng(traces[i].latitude, traces[i].longitude))
+                }
+                var map;
+
+
+                function initMap() {
+                    //初始化地图
+                    map = new TMap.Map("container", {
+                        zoom: 16,//设置地图缩放级别
+                        center: new TMap.LatLng(31.938116613805835, 118.79199706295856) // 设置地图中心点坐标
+                    });
+
+                    var polylineLayer = new TMap.MultiPolyline({
+                        map: map, // 绘制到目标地图
+                        // 折线样式定义
+                        styles: {
+                            'style_blue': new TMap.PolylineStyle({
+                                color: '#3777FF', //线填充色
+                                width: 7, //折线宽度
+                                borderWidth: 0, //边线宽度
+                                showArrow: true,
+                                arrowOptions: {
+                                    space: 70
+                                },
+                                lineCap: 'round',
+                            }),
+                        },
+                        geometries: [{
+                            styleId: 'style_blue',
+                            rainbowPaths: [ // 彩虹线数组
+                                {
+                                    path: paths,
+                                    color: 'rgba(0, 180, 0, 1)',
+                                }
+                            ],
+                        }],
+                    });
+                }
+            </script>
+
+        </main>
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script type="text/javascript" src="asserts/js/jquery-3.2.1.slim.min.js" th:src="@{/webjars/jquery/3.5.1/jquery.js}"></script>
+<script type="text/javascript" src="/asserts/js/popper.min.js"></script>
+<script type="text/javascript" src="asserts/js/bootstrap.min.js" th:src="@{/webjars/bootstrap/4.5.2/js/bootstrap.js}"></script>
+
+<!-- Icons -->
+<script type="text/javascript" src="/asserts/js/feather.min.js" th:src="@{/asserts/js/feather.min.js}"></script>
+<script>
+    feather.replace()
+</script>
+
+<!-- Graphs -->
+<script type="text/javascript" src="asserts/js/Chart.min.js" th:src="@{/asserts/js/Chart.min.js}"></script>
+</body>
+</html>
