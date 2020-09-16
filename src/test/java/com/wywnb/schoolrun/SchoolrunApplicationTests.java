@@ -1,6 +1,7 @@
 package com.wywnb.schoolrun;
 
 import com.wywnb.schoolrun.Dao.BaseTraceDao;
+import com.wywnb.schoolrun.Dao.NoticeDao;
 import com.wywnb.schoolrun.Dao.RunTraceDao;
 import com.wywnb.schoolrun.Dao.UserInfoDao;
 import com.wywnb.schoolrun.Entity.BaseTraceEntity;
@@ -22,11 +23,10 @@ import java.util.Map;
 @SpringBootTest
 class SchoolrunApplicationTests {
     @Resource
-    private BaseTraceDao baseTraceDao;
+    private NoticeDao noticeDao;
 
     @Test
     void contextLoads() {
-        List<BaseTraceEntity> list = baseTraceDao.findById(new ObjectId("5f5f1f61f262dd4f295d9920"));
-        System.out.println(list.toString());
+        noticeDao.update(new ObjectId("5f60586eb7c7864a8f1cf068"), true);
     }
 }

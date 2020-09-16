@@ -43,7 +43,7 @@
     </style>
 </head>
 
-<body>
+<body onload="showModal()">
 <!--引入topbar-->
 <div th:replace="commons/bar::topbar"></div>
 <div class="container-fluid">
@@ -66,11 +66,30 @@
                 <div style="text-align: center">
                     <a type="button" class="btn btn-sm btn-primary"
                        style="width: 120px; margin-bottom: 30px; margin-right: 20px" href="/notice">返回</a>
-                    <a type="button" onclick="submit()" class="btn btn-sm btn-success"
-                       style="width: 120px; margin-bottom: 30px">提交</a>
+                    <button type="button" onclick="submit()" class="btn btn-sm btn-success" id="update"
+                       style="width: 120px; margin-bottom: 30px">提交修改</button>
                 </div>
             </form>
         </main>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                <a type="button" class="close" id="close-x" aria-label="Close"><span aria-hidden="true">&times;</span></a>
+            </div>
+            <div class="modal-body">
+                请选择查看模式：只读 / 修改
+            </div>
+            <div class="modal-footer">
+                <a type="button" id="close-ro" class="btn btn-primary">只读模式</a>
+                <a type="button" id="close-u" class="btn btn-warning" style="margin-left: 20px">修改模式</a>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -90,16 +109,31 @@
 <script>
     feather.replace()
 </script>
-<script type="text/javascript">
-    //markdown
-    $(function () {
+<script type="text/javascript" th:inline="javascript">
+    //markdown-read&write
+    function mdRW() {
+        var notice = [[${notice}]];
+        document.getElementById("titleInput").value = notice.title;
         var editor = editormd("editor", {
             width: "100%",
             height: "480px",
-            markdown: "#公告",     // dynamic set Markdown text
+            markdown: notice.content,     // dynamic set Markdown text
             path: "/asserts/lib/"  // Autoload modules mode, codemirror, marked... dependents libs path
         });
-    });
+    }
+
+    //markdown-read-only
+    function mdRO() {
+        var notice = [[${notice}]];
+        document.getElementById("titleInput").value = notice.title;
+        var editor = editormd("editor", {
+            readOnly: true,
+            width: "100%",
+            height: "480px",
+            markdown: notice.content,     // dynamic set Markdown text
+            path: "/asserts/lib/"  // Autoload modules mode, codemirror, marked... dependents libs path
+        });
+    }
 
     //submit
     function submit() {
@@ -118,7 +152,7 @@
             "showMethod": "fadeIn",
             "hideMethod": "fadeOut"
         };
-
+        var notice = [[${notice}]]
         var title = document.getElementById("titleInput");
         var content = document.getElementById("content");
         if (title.value == null || title.value == '') {
@@ -134,7 +168,7 @@
                 //几个参数需要注意一下
                 type: "POST",//方法类型
                 dataType: "json",//预期服务器返回的数据类型
-                url: "/notice/insert",//url
+                url: "/notice/update/" + notice.id,//url
                 data: $('#form').serialize(),
                 success: function (res) {
                     toastr.success("提交成功，将返回上一页！");
@@ -148,6 +182,35 @@
             });
         }
     }
+</script>
+<script>
+    function showModal() {
+        $('#myModal').modal({backdrop: 'static', keyboard: false});
+    }
+
+    var title = document.getElementById("titleInput");
+    var content = document.getElementById("content");
+    var update = document.getElementById("update");
+    $("#close-x").click(function () {
+        title.readOnly = true;
+        content.readOnly = true;
+        update.disabled = true;
+        mdRO();
+        $('#myModal').modal('hide');
+    });
+    $("#close-ro").click(function () {
+        title.readOnly = true;
+        content.readOnly = true;
+        update.disabled = true;
+        mdRO();
+        $('#myModal').modal('hide');
+    });
+    $("#close-u").click(function () {
+        title.readOnly = false;
+        content.readOnly = false;
+        mdRW();
+        $('#myModal').modal('hide');
+    });
 </script>
 </body>
 </html>
