@@ -12,7 +12,15 @@ public class LoginHandlerInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         Object user = request.getSession().getAttribute("loginUser");
+        String url = request.getRequestURI();
+        String method = request.getMethod();
         if(user == null) {
+            if(method.equals("GET") && (url.equals("/logup.html") || url.equals("/logup"))) {
+                return true;
+            }
+            if(method.equals("POST") && url.equals("logup/submit")) {
+                return true;
+            }
             //未登录
             request.setAttribute("msg", "请先登录！");
             request.getRequestDispatcher("/index.html").forward(request, response);

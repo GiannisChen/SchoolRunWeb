@@ -34,29 +34,67 @@ public class LoginController {
             UserInfoEntity user = userInfoService.isPasswordMatch(username, password);
             if (user != null) {
                 session.setAttribute("loginUser", username);
-                session.setAttribute("isAdmin", user.getIsAdmin());
+                session.setAttribute("permission", user.getPermission());
                 session.setAttribute("email", user.getEmail());
+                session.setAttribute("id", user.getId());
                 map.put("success", "登陆成功！");
                 return "dashboard";
             } else {
                 map.put("msg", "用户名密码错误");
                 session.removeAttribute("loginUser");
-                session.removeAttribute("isAdmin");
+                session.removeAttribute("permission");
                 return "login";
             }
+        } else {
+            map.put("msg", "用户名密码错误！");
+            return "login";
         }
-        else{
-                map.put("msg", "用户名密码错误！");
-                return "login";
-            }
-        }
+    }
 
     @RequestMapping(value = "dashboard", method = RequestMethod.GET)
-    public String backToDashboard (HttpSession session){
+    public String backToDashboard(HttpSession session) {
         if (session.getAttribute("loginUser") == null) {
             return "login";
         } else {
             return "dashboard";
+        }
+    }
+
+    @RequestMapping(value = {"logup", "logup.html"}, method = RequestMethod.GET)
+    public String logupPage() {
+        return "logup";
+    }
+
+    @RequestMapping(value = "logup/submit", method = RequestMethod.POST)
+    public String logup(@RequestParam(value = "username", required = false) String username,
+                        @RequestParam(value = "password", required = false) String password,
+                        @RequestParam(value = "check", required = false) String check,
+                        @RequestParam(value = "invitation_code", required = false) String code,
+                        Map<String, Object> map, HttpSession session) {
+
+        if (username != null && password != null && check != null && code != null) {
+            if(!password.equals(check)) {
+                map.put("msg", "两次密码有出入!");
+                session.removeAttribute("loginUser");
+                return "logup";
+            }
+            else {
+                if(userInfoService.codeExist(code)) {
+                    UserInfoEntity newUser = new UserInfoEntity(username, password);
+                    userInfoService.insert(newUser);
+                    map.put("success", "注册成功！");
+                    return "login";
+                }
+                else {
+                    map.put("msg", "邀请码不存在!");
+                    session.removeAttribute("loginUser");
+                    return "logup";
+                }
+            }
+        }
+        else {
+            map.put("msg", "用户名密码错误！");
+            return "logup";
         }
     }
 }

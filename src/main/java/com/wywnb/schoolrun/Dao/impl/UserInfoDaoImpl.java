@@ -10,13 +10,13 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Component
 public class UserInfoDaoImpl implements UserInfoDao {
+
     @Resource
     private MongoTemplate mongoTemplate;
 
@@ -56,7 +56,8 @@ public class UserInfoDaoImpl implements UserInfoDao {
             update.set("username", user.getUsername());
             update.set("password", user.getPassword());
             update.set("email", user.getEmail());
-            update.set("isAdmin", user.getIsAdmin());
+            update.set("permission", user.getPermission());
+            update.set("invitation_code", user.getInvitation_code());
 
             mongoTemplate.updateFirst(query, update, UserInfoEntity.class);
             map.put("success", "Ok");
@@ -69,21 +70,24 @@ public class UserInfoDaoImpl implements UserInfoDao {
 
     @Override
     public List<UserInfoEntity> findAll() {
-        List<UserInfoEntity> list = mongoTemplate.findAll(UserInfoEntity.class);
-        return list;
+        return mongoTemplate.findAll(UserInfoEntity.class);
     }
 
     @Override
     public List<UserInfoEntity> findByUsername(String username) {
         Query query = new Query(Criteria.where("username").is(username));
-        List<UserInfoEntity> list = mongoTemplate.find(query,UserInfoEntity.class);
-        return list;
+        return mongoTemplate.find(query,UserInfoEntity.class);
     }
 
     @Override
     public UserInfoEntity findByID(ObjectId id) {
         Query query = new Query(Criteria.where("id").is(id));
-        UserInfoEntity user = mongoTemplate.findOne(query,UserInfoEntity.class);
-        return user;
+        return mongoTemplate.findOne(query,UserInfoEntity.class);
+    }
+
+    @Override
+    public UserInfoEntity findByCode(String code) {
+            Query query = new Query(Criteria.where("invitation_code").is(code));
+        return mongoTemplate.findOne(query, UserInfoEntity.class);
     }
 }

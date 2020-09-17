@@ -16,5 +16,13 @@ public class UserInfoEntity implements Serializable {
     private String username;
     private String password;
     private String email;
-    private Boolean isAdmin;
+    private String permission;
+    private String invitation_code;
+
+    public UserInfoEntity() {}
+    public UserInfoEntity(String username, String password) {
+        this.username = username;
+        this.password = password;
+        this.permission = "user";
+    }
 }

@@ -13,4 +13,5 @@ public interface UserInfoDao {
     List<UserInfoEntity> findAll();
     List<UserInfoEntity> findByUsername(String username);
     UserInfoEntity findByID(ObjectId id);
+    UserInfoEntity findByCode(String code);
 }

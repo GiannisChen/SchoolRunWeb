@@ -23,10 +23,10 @@ import java.util.Map;
 @SpringBootTest
 class SchoolrunApplicationTests {
     @Resource
-    private NoticeDao noticeDao;
+    private UserInfoDao userInfoDao;
 
     @Test
     void contextLoads() {
-        noticeDao.update(new ObjectId("5f616879a2c4ec5b89127990"), "test", "test");
+        userInfoDao.findByCode("");
     }
 }

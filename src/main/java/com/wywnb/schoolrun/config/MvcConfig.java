@@ -15,7 +15,7 @@ import java.util.List;
 @Configuration
 public class MvcConfig implements WebMvcConfigurer {
     private static final List<String> EXCLUDE_PATH = Arrays.asList(
-            "/", "/index", "/index.html", "/dashboard/**", "/asserts/**", "/webjars/**", "/login", "/asserts/js/**"
+            "/", "/index", "/index.html", "/dashboard/**", "/asserts/**", "/webjars/**", "/login", "/asserts/js/**", "/logup/**"
     );
 
 
