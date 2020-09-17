@@ -58,7 +58,7 @@
 								<div class="stat-widget-two">
 									<div class="stat-content">
 										<div class="stat-text">今日打卡（人）</div>
-										<div class="stat-digit">8500</div>
+										<div class="stat-digit" th:text="${details.getPostDailyNum()}">--</div>
 									</div>
 									<div class="progress">
 										<div class="progress-bar progress-bar-success w-50" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100"></div>
@@ -71,7 +71,7 @@
 								<div class="stat-widget-two">
 									<div class="stat-content">
 										<div class="stat-text">今日体能（人）</div>
-										<div class="stat-digit">7800</div>
+										<div class="stat-digit" th:text="${details.getTraceDailyNum()}">--</div>
 									</div>
 									<div class="progress">
 										<div class="progress-bar progress-bar-primary w-50" role="progressbar" aria-valuenow="78" aria-valuemin="0" aria-valuemax="100"></div>
@@ -84,7 +84,7 @@
 								<div class="stat-widget-two">
 									<div class="stat-content">
 										<div class="stat-text">打卡总计（人次）</div>
-										<div class="stat-digit">500</div>
+										<div class="stat-digit" th:text="${details.getPostTotalNum()}">--</div>
 									</div>
 									<div class="progress">
 										<div class="progress-bar progress-bar-warning w-50" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
@@ -97,7 +97,7 @@
 								<div class="stat-widget-two">
 									<div class="stat-content">
 										<div class="stat-text">体能总计（人次）</div>
-										<div class="stat-digit">650</div>
+										<div class="stat-digit" th:text="${details.getTraceTotalNum()}">--</div>
 									</div>
 									<div class="progress">
 										<div class="progress-bar progress-bar-danger w-50" role="progressbar" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
@@ -114,7 +114,7 @@
 						<div class="col-lg-10">
 							<div class="card">
 								<div class="card-body">
-									<h4 class="stat-text" style=" margin-bottom: 20px">Sales Overview</h4>
+									<h4 class="stat-text" style=" margin-bottom: 20px">每日体能</h4>
 									<div id="heat-chart" style="width: 100%; height: 200px;"></div>
 								</div>
 							</div>
@@ -160,32 +160,49 @@
 </script>
 <!-- Graphs -->
 <script type="text/javascript" th:src="@{/webjars/echarts/4.7.0/dist/echarts.js}"></script>
-<script type="text/javascript">
-	var heat_chart = echarts.init(document.getElementById('heat-chart'));
-	function getVirtulData(year) {
-		year = year || '2017';
-		var date = +echarts.number.parseDate(year + '-01-01');
-		var end = +echarts.number.parseDate((+year + 1) + '-01-01');
-		var dayTime = 3600 * 24 * 1000;
-		var data = [];
-		for (var time = date; time < end; time += dayTime) {
-			data.push([
-				echarts.format.formatTime('yyyy-MM-dd', time),
-				Math.floor(Math.random() * 10000)
-			]);
-		}
-		return data;
+<!--script type="text/javascript">
+	function getDetails() {
+		$.ajax({
+			//几个参数需要注意一下
+			type: "POST",//方法类型
+			dataType: "json",//预期服务器返回的数据类型
+			url: "/dashboard/getDetails",//url
+			success: function (res) {
+				console.log(res);
+			},
+			error: function () {
+				console.log("error");
+			}
+		});
 	}
+</script-->
+<script src="asserts/js/theme/macarons.js"></script>
+<script type="text/javascript" th:inline="javascript">
+	var heat_chart = echarts.init(document.getElementById('heat-chart'), 'macarons');
 
+	var tc = [[${details.traceCalendar}]];
+	var map = new Map(Object.entries([[${details.traceCalendar}]]));
+	console.log(map);
+	var data = [];
+	map.forEach(function (value, key) {
+		data.push([key, value]);
+	})
+
+	var cur = new Date();
+	var range = cur.getFullYear().toString();
 	option = {
-		tooltip: {},
+		tooltip: {
+			formatter: function (params) {
+				return params.value[0] + "打卡" + params.value[1] + "人"
+			},
+		},
 		visualMap: {
 			min: 0,
-			max: 10000,
+			max: 15,
 			type: 'piecewise',
 			orient: 'horizontal',
 			left: 'center',
-			top: 1600,
+			top: 160,
 			textStyle: {
 				color: '#000'
 			}
@@ -195,7 +212,7 @@
 			left: 30,
 			right: 30,
 			cellSize: ['auto', 13],
-			range: '2016',
+			range: range,
 			itemStyle: {
 				borderWidth: 0.5
 			},
@@ -204,7 +221,7 @@
 		series: {
 			type: 'heatmap',
 			coordinateSystem: 'calendar',
-			data: getVirtulData(2016)
+			data: data
 		}
 	};
 

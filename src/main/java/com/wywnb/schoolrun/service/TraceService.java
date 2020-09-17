@@ -17,4 +17,8 @@ public interface TraceService {
     List<GPSPoint2V> findGPSPoint2VById(ObjectId id);
 
     Map<String, String> delete(ObjectId id);
+
+    Long countAll();
+
+    Long countDaily();
 }

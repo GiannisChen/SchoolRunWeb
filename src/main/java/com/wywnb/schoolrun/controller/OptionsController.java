@@ -2,6 +2,7 @@ package com.wywnb.schoolrun.controller;
 
 import com.wywnb.schoolrun.Entity.UserInfoEntity;
 import com.wywnb.schoolrun.component.SHA256Coding;
+import com.wywnb.schoolrun.service.DashboardService;
 import com.wywnb.schoolrun.service.UserInfoService;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Controller;
@@ -9,9 +10,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.Map;
 
 @Controller
@@ -19,8 +22,10 @@ import java.util.Map;
 public class OptionsController {
     @Resource
     private UserInfoService userInfoService;
+    @Resource
+    private DashboardService dashboardService;
 
-    @RequestMapping("invitation_code")
+    @RequestMapping(value = "invitation_code", method = RequestMethod.GET)
     public String invitationCode(Model model, HttpSession session) {
         ObjectId id = (ObjectId) session.getAttribute("id");
         String code = "error-code-find-help";
@@ -47,5 +52,13 @@ public class OptionsController {
         code = code.toUpperCase();
         model.addAttribute("code", code);
         return "invitationCode";
+    }
+
+    @RequestMapping(value = "dashboard/getDetails", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> getDetails() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("success", dashboardService.getDetails());
+        return map;
     }
 }

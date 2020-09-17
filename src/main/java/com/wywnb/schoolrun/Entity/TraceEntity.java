@@ -6,6 +6,7 @@ import lombok.Data;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -23,7 +24,8 @@ public class TraceEntity {
     private String open_id;
     private Integer student_id;
     private String ip;
-    private Long post_time;
+    @Field("post_time")
+    private Long postTime;
     private Double DTW;
     private String base_id;
 

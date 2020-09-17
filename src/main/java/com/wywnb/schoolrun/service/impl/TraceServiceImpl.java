@@ -10,6 +10,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -51,5 +52,23 @@ public class TraceServiceImpl implements TraceService {
     @Override
     public Map<String, String> delete(ObjectId id) {
         return traceDao.delete(id);
+    }
+
+    @Override
+    public Long countAll() {
+        return traceDao.countAll();
+    }
+
+    @Override
+    public Long countDaily() {
+        Calendar cur = Calendar.getInstance();
+        cur.set(Calendar.HOUR_OF_DAY, 0);
+        cur.set(Calendar.MINUTE, 0);
+        cur.set(Calendar.SECOND, 0);
+        cur.set(Calendar.MILLISECOND, 0);
+        Long startTime = cur.getTimeInMillis();
+        cur.add(Calendar.DATE, 1);
+        Long endTime = cur.getTimeInMillis();
+        return traceDao.countDaily(startTime, endTime);
     }
 }

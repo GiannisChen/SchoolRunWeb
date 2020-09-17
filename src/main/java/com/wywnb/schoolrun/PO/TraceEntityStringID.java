@@ -2,13 +2,10 @@ package com.wywnb.schoolrun.PO;
 
 import com.wywnb.schoolrun.Entity.TraceEntity;
 import lombok.Data;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 
 import java.sql.Date;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.List;
 
 @Data
@@ -35,7 +32,7 @@ public class TraceEntityStringID {
         this.ip = trace.getIp();
         this.DTW = trace.getDTW();
         this.base_id = trace.getBase_id();
-        Date temp = new Date(trace.getPost_time());
+        Date temp = new Date(trace.getPostTime());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         this.date = sdf.format(temp);
     }

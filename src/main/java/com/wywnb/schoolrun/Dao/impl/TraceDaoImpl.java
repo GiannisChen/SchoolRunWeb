@@ -6,6 +6,8 @@ import com.wywnb.schoolrun.Entity.RunTraceEntity;
 import com.wywnb.schoolrun.Entity.TraceEntity;
 import com.wywnb.schoolrun.PO.GPSPoint2V;
 import org.bson.types.ObjectId;
+import org.springframework.core.annotation.Order;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -23,6 +25,13 @@ public class TraceDaoImpl implements TraceDao {
     @Override
     public List<TraceEntity> findAll() {
         return mongoTemplate.findAll(TraceEntity.class);
+    }
+
+    @Override
+    public List<TraceEntity> findAllASC() {
+        Query query = new Query();
+        query.with(Sort.by(Sort.Order.asc("postTime")));
+        return mongoTemplate.find(query, TraceEntity.class);
     }
 
     @Override
@@ -54,5 +63,18 @@ public class TraceDaoImpl implements TraceDao {
             map.put("msg", "delete error");
         }
         return map;
+    }
+
+    @Override
+    public Long countAll() {
+        Query query = new Query();
+        return mongoTemplate.count(query, TraceEntity.class);
+    }
+
+    @Override
+    public Long countDaily(Long startTime, Long endTime) {
+        Query query = new Query(Criteria.where("postTime").gte(startTime).
+                andOperator(Criteria.where("postTime").lt(endTime)));
+        return mongoTemplate.count(query, TraceEntity.class);
     }
 }

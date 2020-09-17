@@ -2,8 +2,10 @@ package com.wywnb.schoolrun.controller;
 
 import com.wywnb.schoolrun.Dao.UserInfoDao;
 import com.wywnb.schoolrun.Entity.UserInfoEntity;
+import com.wywnb.schoolrun.service.DashboardService;
 import com.wywnb.schoolrun.service.UserInfoService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,6 +21,8 @@ public class LoginController {
 
     @Resource
     private UserInfoService userInfoService;
+    @Resource
+    private DashboardService dashboardService;
 
     @RequestMapping({"login", "", "login.html"})
     public String login() {
@@ -28,7 +32,7 @@ public class LoginController {
     @RequestMapping(value = "dashboard", method = RequestMethod.POST)
     public String login(@RequestParam(value = "username", required = false) String username,
                         @RequestParam(value = "password", required = false) String password,
-                        Map<String, Object> map, HttpSession session) {
+                        Map<String, Object> map, HttpSession session, Model model) {
 
         if (username != null && password != null) {
             UserInfoEntity user = userInfoService.isPasswordMatch(username, password);
@@ -38,6 +42,7 @@ public class LoginController {
                 session.setAttribute("email", user.getEmail());
                 session.setAttribute("id", user.getId());
                 map.put("success", "登陆成功！");
+                model.addAttribute("details", dashboardService.getDetails());
                 return "dashboard";
             } else {
                 map.put("msg", "用户名密码错误");
@@ -52,10 +57,11 @@ public class LoginController {
     }
 
     @RequestMapping(value = "dashboard", method = RequestMethod.GET)
-    public String backToDashboard(HttpSession session) {
+    public String backToDashboard(HttpSession session, Model model) {
         if (session.getAttribute("loginUser") == null) {
             return "login";
         } else {
+            model.addAttribute("details", dashboardService.getDetails());
             return "dashboard";
         }
     }
