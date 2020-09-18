@@ -40,8 +40,27 @@
             animation: chartjs-render-animation 0.001s;
         }
     </style>
-</head>
 
+	<script type="text/javascript" src="asserts/js/jquery-3.2.1.slim.min.js"
+			th:src="@{/webjars/jquery/3.5.1/jquery.js}"></script>
+	<script type="text/javascript" src="asserts/js/popper.min.js"
+			th:src="@{/webjars/popper.js/1.11.1/dist/popper.js}"></script>
+	<script type="text/javascript" src="asserts/js/bootstrap.min.js"
+			th:src="@{/webjars/bootstrap/4.5.2/js/bootstrap.js}"></script>
+
+	<!-- Icons -->
+	<script type="text/javascript" src="asserts/js/feather.min.js" th:src="@{/asserts/js/feather.min.js}"></script>
+	<!-- Graphs -->
+	<script type="text/javascript" th:src="@{/webjars/echarts/4.7.0/dist/echarts.js}"></script>
+	<script src="asserts/js/theme/macarons.js"></script>
+
+</head>
+<style type="text/css">
+	.myTable-container {
+		width: 100%;
+		height: 250px;
+	}
+</style>
 <body>
 <!--引入topbar-->
 <div th:replace="commons/bar::topbar"></div>
@@ -52,6 +71,7 @@
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
 			<div class="container-fluid">
 				<section id="main-content">
+
 					<div class="row">
 						<div class="col-lg-3">
 							<div class="card">
@@ -109,33 +129,60 @@
 						<!-- /# column -->
 					</div>
 					<!-- /# row -->
+<!--					<div class="row">-->
+<!--						&lt;!&ndash; column &ndash;&gt;-->
+<!--						<div class="col-lg-10">-->
+<!--							<div class="card">-->
+<!--								<div class="card-body">-->
+<!--									<h4 class="stat-text" style=" margin-bottom: 20px">每日体能</h4>-->
+<!--									<div id="heat-chart" style="width: 100%; height: 200px;"></div>-->
+<!--								</div>-->
+<!--							</div>-->
+<!--						</div>-->
+<!--						&lt;!&ndash; column &ndash;&gt;-->
+<!--						<div class="col-md-2">-->
+<!--							<div class="card text-center">-->
+<!--								<div class="m-t-10">-->
+<!--									<p>Customer Feedback</p>-->
+<!--									<h5>385749</h5>-->
+<!--								</div>-->
+<!--								<div class="widget-card-circle pr m-t-20 m-b-20" id="info-circle-card">-->
+<!--									<i class="ti-control-shuffle pa"></i>-->
+<!--								</div>-->
+<!--								<ul class="widget-line-list m-b-15">-->
+<!--									<li class="border-right">92% <br><span class="color-success"><i class="ti-hand-point-up"></i> Positive</span></li>-->
+<!--									<li>8% <br><span class="color-danger"><i class="ti-hand-point-down"></i>Negative</span></li>-->
+<!--								</ul>-->
+<!--							</div>-->
+<!--						</div>-->
+<!--					</div>-->
+
 					<div class="row">
-						<!-- column -->
 						<div class="col-lg-10">
 							<div class="card">
 								<div class="card-body">
-									<h4 class="stat-text" style=" margin-bottom: 20px">每日体能</h4>
-									<div id="heat-chart" style="width: 100%; height: 200px;"></div>
-								</div>
-							</div>
-						</div>
-						<!-- column -->
-						<div class="col-md-2">
-							<div class="card text-center">
-								<div class="m-t-10">
-									<p>Customer Feedback</p>
-									<h5>385749</h5>
-								</div>
-								<div class="widget-card-circle pr m-t-20 m-b-20" id="info-circle-card">
-									<i class="ti-control-shuffle pa"></i>
-								</div>
-								<ul class="widget-line-list m-b-15">
-									<li class="border-right">92% <br><span class="color-success"><i class="ti-hand-point-up"></i> Positive</span></li>
-									<li>8% <br><span class="color-danger"><i class="ti-hand-point-down"></i>Negative</span></li>
-								</ul>
-							</div>
-						</div>
+									<div class="container" style="padding-top: 0%; padding-left: 5%">
+										<ul id="myTab" class="nav nav-tabs">
+											<li class="nav-item"><a href="#tab1" class="nav-link  active" data-toggle="tab">体能</a></li>
+											<li class="nav-item"><a href="#tab2" class="nav-link" data-toggle="tab">打卡</a></li>
+											<!--li class="nav-item"><a href="#tab3" class="nav-link" data-toggle="tab">Tab3</a></li-->
+										</ul>
 
+										<div id="myTabContent" class="tab-content">
+											<div class="tab-pane active" id="tab1" style="height: 200px">
+												<div id="tab1-container" class="myTable-container"></div>
+											</div>
+											<div class="tab-pane" id="tab2" style="height: 200px">
+												<div id="tab2-container" class="myTable-container"></div>
+											</div>
+											<!--div class="tab-pane " id="tab3">
+												<div id="tab3-container" class="myTable-container"></div>
+											</div-->
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
 				</section>
 			</div>
@@ -146,51 +193,24 @@
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
-<script type="text/javascript" src="asserts/js/jquery-3.2.1.slim.min.js"
-        th:src="@{/webjars/jquery/3.5.1/jquery.js}"></script>
-<script type="text/javascript" src="asserts/js/popper.min.js"
-        th:src="@{/webjars/popper.js/1.11.1/dist/popper.js}"></script>
-<script type="text/javascript" src="asserts/js/bootstrap.min.js"
-        th:src="@{/webjars/bootstrap/4.5.2/js/bootstrap.js}"></script>
-
-<!-- Icons -->
-<script type="text/javascript" src="asserts/js/feather.min.js" th:src="@{/asserts/js/feather.min.js}"></script>
 <script>
     feather.replace()
 </script>
-<!-- Graphs -->
-<script type="text/javascript" th:src="@{/webjars/echarts/4.7.0/dist/echarts.js}"></script>
-<!--script type="text/javascript">
-	function getDetails() {
-		$.ajax({
-			//几个参数需要注意一下
-			type: "POST",//方法类型
-			dataType: "json",//预期服务器返回的数据类型
-			url: "/dashboard/getDetails",//url
-			success: function (res) {
-				console.log(res);
-			},
-			error: function () {
-				console.log("error");
-			}
-		});
-	}
-</script-->
-<script src="asserts/js/theme/macarons.js"></script>
-<script type="text/javascript" th:inline="javascript">
-	var heat_chart = echarts.init(document.getElementById('heat-chart'), 'macarons');
-
-	var tc = [[${details.traceCalendar}]];
-	var map = new Map(Object.entries([[${details.traceCalendar}]]));
-	console.log(map);
-	var data = [];
-	map.forEach(function (value, key) {
-		data.push([key, value]);
+<script  type="text/javascript" th:inline="javascript">
+	//init data
+	var $tab1 = document.getElementById('tab1-container');
+	var $tab2 = document.getElementById('tab2-container');
+	var traceMap = new Map(Object.entries([[${details.traceCalendar}]]));
+	var traceData = [];
+	var postData = [];
+	traceMap.forEach(function (value, key) {
+		traceData.push([key, value]);
 	})
-
 	var cur = new Date();
 	var range = cur.getFullYear().toString();
-	option = {
+
+	/* 体能热力图 */
+	var tab1Option = {
 		tooltip: {
 			formatter: function (params) {
 				return params.value[0] + "打卡" + params.value[1] + "人"
@@ -221,12 +241,64 @@
 		series: {
 			type: 'heatmap',
 			coordinateSystem: 'calendar',
-			data: data
+			data: traceData
 		}
 	};
 
-	// 使用刚指定的配置项和数据显示图表。
-	heat_chart.setOption(option);
+	/* 打卡热力图 */
+	var tab2Option = {
+		tooltip: {
+			formatter: function (params) {
+				return params.value[0] + "打卡" + params.value[1] + "人"
+			},
+		},
+		visualMap: {
+			min: 0,
+			max: 15,
+			type: 'piecewise',
+			orient: 'horizontal',
+			left: 'center',
+			top: 160,
+			textStyle: {
+				color: '#000'
+			}
+		},
+		calendar: {
+			top: 40,
+			left: 30,
+			right: 30,
+			cellSize: ['auto', 13],
+			range: range,
+			itemStyle: {
+				borderWidth: 0.5
+			},
+			yearLabel: {show: false}
+		},
+		series: {
+			type: 'heatmap',
+			coordinateSystem: 'calendar',
+			data: postData
+		}
+	};
+
+	/* 初始化tab1的 */
+	var tab1Table = echarts.init($tab1, "macarons");
+	tab1Table.setOption(tab1Option);
+
+	/* shown.bs.tab为tab选项卡高亮 */
+	$('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+		/* 获取已激活的标签页的名称 */
+		/* hash 属性是一个可读可写的字符串，该字符串是 URL 从 # 号开始的部分 */
+		var activeTab = $(e.target)[0].hash;
+		/* 当相应的标签被点击时，进行对应的图表渲染 */
+		if (activeTab == "#tab2") {
+			/* 释放图表实例，使实例不可用,不加上这个，会报错： */
+			/* there is a chart instance     already initialized on the dom */
+			echarts.dispose($tab2);
+			var tab2Table = echarts.init($tab2, "macarons");
+			tab2Table.setOption(tab2Option);
+		}
+	});
 </script>
 </body>
 </html>

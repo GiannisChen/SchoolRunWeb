@@ -1,146 +1,158 @@
-<!DOCTYPE html>
-<html lang="en">
-
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>绘制几何图形</title>
+    <meta charset="utf-8" />
+    <title>图表选项卡</title>
+    <link href="asserts/css/bootstrap.min.css" th:href="@{/webjars/bootstrap/4.5.2/css/bootstrap.css}" rel="stylesheet">
+    <script type="text/javascript" src="asserts/js/jquery-3.2.1.slim.min.js"
+            th:src="@{/webjars/jquery/3.5.1/jquery.js}"></script>
+    <script type="text/javascript" th:src="@{/webjars/echarts/4.7.0/dist/echarts.js}"></script>
+    <script type="text/javascript" src="asserts/js/bootstrap.min.js"
+            th:src="@{/webjars/bootstrap/4.5.2/js/bootstrap.js}"></script>
 </head>
-<script charset="utf-8" src="https://map.qq.com/api/gljs?libraries=tools&v=1.exp&key=OB4BZ-D4W3U-B7VVO-4PJWW-6TKDJ-WPB77"></script>
 <style type="text/css">
-    html,
-    body {
-        height: 100%;
-        margin: 0px;
-        padding: 0px;
-    }
-
-    #container {
-        width: 100%;
-        height: 80%;
-    }
-
-    #toolControl {
-        position: absolute;
-        top: 10px;
-        left: 0px;
-        right: 0px;
-        margin: auto;
-        width: 168px;
-        z-index: 1001;
-    }
-    .toolItem {
-        width: 30px;
-        height: 30px;
-        float: left;
-        margin: 1px;
-        padding: 4px;
-        border-radius: 3px;
-        background-size: 30px 30px;
-        background-position: 4px 4px;
-        background-repeat: no-repeat;
-        box-shadow: 0 1px 2px 0 #E4E7EF;
-        background-color: #ffffff;
-        border: 1px solid #ffffff;
-    }
-    .toolItem:hover {
-        border-color: #789CFF;
-    }
-    .active {
-        border-color: #D5DFF2;
-        background-color: #D5DFF2;
-    }
-
-    #marker {
-        background-image: url('https://mapapi.qq.com/web/lbs/javascriptGL/demo/img/marker_editor.png');
-    }
-    #polyline {
-        background-image: url('https://mapapi.qq.com/web/lbs/javascriptGL/demo/img/polyline.png');
-    }
-    #polygon {
-        background-image: url('https://mapapi.qq.com/web/lbs/javascriptGL/demo/img/polygon.png');
-    }
-    #circle {
-        background-image: url('https://mapapi.qq.com/web/lbs/javascriptGL/demo/img/circle.png');
+    .myTable-container {
+        width: 800px;
+        height: 430px;
     }
 </style>
+<body>
 
-<body onload="initMap()">
-<div id="container"></div>
-<div id="toolControl">
-    <div class="toolItem active" id="marker" title="点标记"></div>
-    <div class="toolItem" id="polyline" title="折线"></div>
-    <div class="toolItem" id="polygon" title="多边形"></div>
-    <div class="toolItem" id="circle" title="圆形"></div>
+<div class="col-lg-6">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Slides With captions</h4>
+            <!-- 选项卡菜单-->
+            <ul id="myTab" class="nav nav-pills" role="tablist">
+                <li class="active"><a href="#bulletin" role="tab">公告</a></li>
+                <li><a href="#rule" role="tab" >规则</a></li>
+                <li><a href="#forum" role="tab" >论坛</a></li>
+                <li><a href="#security" role="tab" >安全</a></li>
+                <li><a href="#welfare" role="tab" >公益</a></li>
+            </ul>
+            <!-- 选项卡面板 -->
+            <div id="myTabContent" class="tab-content">
+                <div class="tab-pane fade in active" id="bulletin">公告内容面板</div>
+                <div class="tab-pane fade" id="rule">规则内容面板</div>
+                <div class="tab-pane fade" id="forum">论坛内容面板</div>
+                <div class="tab-pane fade" id="security">安全内容面板</div>
+                <div class="tab-pane fade" id="welfare">公益内容面板</div>
+            </div>
+            <script>
+                $(function(){
+                    $("#myTab a").click(function(e){
+                        e.preventDefault();
+                        $(this).tab("show");
+                    });
+                })
+            </script>
+        </div>
+    </div>
 </div>
-<div>
-    绘制：鼠标左键点击及移动即可绘制图形<br/>
-    结束绘制：鼠标左键双击即可结束绘制折线、多边形、多边形会自动闭合；圆形单击即可结束<br/>
-    中断：绘制过程中按下esc键可中断该过程
-</div>
-<script type="text/javascript">
-    var map, editor, activeType = 'marker';
+<script>
+    var $tab1 = document.getElementById('tab1-container');
+    var $tab2 = document.getElementById('tab2-container');
+    var $tab3 = document.getElementById('tab3-container');
 
-    // 切换激活图层
-    document.getElementById('toolControl').addEventListener('click', (e) => {
-        let id = e.target.id;
-        if (id !== 'toolControl') {
-            document.getElementById(activeType).className = "toolItem";
-            document.getElementById(id).className = "toolItem active";
-            activeType = id;
+    /* 折线图 */
+    var tab1Option = {
+        xAxis : {
+            type : 'category',
+            data : [ 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun' ]
+        },
+        yAxis : {
+            type : 'value'
+        },
+        series : [ {
+            data : [ 820, 932, 901, 934, 1290, 1330, 1320 ],
+            type : 'line'
+        } ]
+    };
 
-            editor.setActiveOverlay(id);
+    /* 饼图 */
+    var tab2Option = {
+        title : {
+            text : '某站点用户访问来源',
+            subtext : '纯属虚构',
+            x : 'center'
+        },
+        tooltip : {
+            trigger : 'item',
+            formatter : "{a} <br/>{b} : {c} ({d}%)"
+        },
+        legend : {
+            orient : 'vertical',
+            left : 'left',
+            data : [ '直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎' ]
+        },
+        series : [ {
+            name : '访问来源',
+            type : 'pie',
+            radius : '55%',
+            center : [ '50%', '60%' ],
+            data : [ {
+                value : 335,
+                name : '直接访问'
+            }, {
+                value : 310,
+                name : '邮件营销'
+            }, {
+                value : 234,
+                name : '联盟广告'
+            }, {
+                value : 135,
+                name : '视频广告'
+            }, {
+                value : 1548,
+                name : '搜索引擎'
+            } ],
+            itemStyle : {
+                emphasis : {
+                    shadowBlur : 10,
+                    shadowOffsetX : 0,
+                    shadowColor : 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        } ]
+    };
+
+    /* 柱图  */
+    var tab3Option = {
+        xAxis : {
+            type : 'category',
+            data : [ 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun' ]
+        },
+        yAxis : {
+            type : 'value'
+        },
+        series : [ {
+            data : [ 120, 200, 150, 80, 70, 110, 130 ],
+            type : 'bar'
+        } ]
+    };
+
+    /* 初始化tab1的 */
+    var tab1Table = echarts.init($tab1);
+    tab1Table.setOption(tab1Option);
+
+    /* shown.bs.tab为tab选项卡高亮 */
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+        /* 获取已激活的标签页的名称 */
+        /* hash 属性是一个可读可写的字符串，该字符串是 URL 从 # 号开始的部分 */
+        var activeTab = $(e.target)[0].hash;
+        /* 当相应的标签被点击时，进行对应的图表渲染 */
+        if (activeTab == "#tab2") {
+            /* 释放图表实例，使实例不可用,不加上这个，会报错： */
+            /* there is a chart instance     already initialized on the dom */
+            echarts.dispose($tab2);
+            var tab2Table = echarts.init($tab2);
+            tab2Table.setOption(tab2Option);
+        } else if (activeTab == "#tab3") {
+            echarts.dispose($tab3);
+            var tab3Table = echarts.init($tab3);
+            tab3Table.setOption(tab3Option);
         }
     });
-
-    function initMap() {
-        // 初始化地图
-        map = new TMap.Map("container", {
-            zoom: 12, // 设置地图缩放级别
-            center: new TMap.LatLng(39.984104, 116.307503) // 设置地图中心点坐标
-        });
-
-        // 初始化几何图形及编辑器
-        editor = new TMap.tools.GeometryEditor({
-            map, // 编辑器绑定的地图对象
-            overlayList: [ // 可编辑图层
-                {
-                    overlay: new TMap.MultiMarker({
-                        map
-                    }),
-                    id: 'marker'
-                },
-                {
-                    overlay: new TMap.MultiPolyline({
-                        map
-                    }),
-                    id: 'polyline'
-                },
-                {
-                    overlay: new TMap.MultiPolygon({
-                        map
-                    }),
-                    id: 'polygon'
-                },
-                {
-                    overlay: new TMap.MultiCircle({
-                        map
-                    }),
-                    id: 'circle'
-                }
-            ],
-            actionMode: TMap.tools.constants.EDITOR_ACTION.DRAW, // 编辑器的工作模式
-            activeOverlayId: 'marker', // 激活图层
-            snappable: true // 开启吸附
-        });
-
-        // 监听绘制结束事件，获取绘制几何图形
-        editor.on('draw_complete', (geometry) => {
-            console.log(geometry);
-        });
-    }
 </script>
 </body>
-
 </html>
