@@ -2,12 +2,12 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>“校园跑”微信小程序后台</title>
     <link href="asserts/css/bootstrap.min.css" th:href="@{/webjars/bootstrap/4.5.2/css/bootstrap.css}" rel="stylesheet">
 </head>
 <body>
 <!--topbar-->
-<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0" th:fragment="topbar">
+<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0" style="!important;" th:fragment="topbar">
     <span class="navbar-brand col-sm-3 col-md-2 mr-0">[[${session.loginUser}]]</span>
     <span class="navbar-brand bg-dark navbar-dark" type="text" th:text="#{login.program}">“校园跑”微信小程序</span>
     <ul class="navbar-nav px-3">
@@ -18,7 +18,7 @@
 </nav>
 
 <!--sidebar-->
-<nav class="col-md-2 d-none d-md-block bg-light sidebar" id="sidebar">
+<nav class="col-md-2 d-none d-md-block bg-light sidebar" style="!important;" id="sidebar">
     <div class="sidebar-sticky">
         <ul class="nav flex-column">
             <li class="nav-item">

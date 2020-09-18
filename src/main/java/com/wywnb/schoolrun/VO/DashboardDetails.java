@@ -1,5 +1,6 @@
 package com.wywnb.schoolrun.VO;
 
+import com.wywnb.schoolrun.Entity.DailyPostEntity;
 import com.wywnb.schoolrun.Entity.TraceEntity;
 import lombok.Data;
 
@@ -21,6 +22,13 @@ public class DashboardDetails {
         this.traceCalendar = new HashMap<>();
         for(Map.Entry<String, List<TraceEntity>> entry : trace.entrySet()){
             this.traceCalendar.put(entry.getKey(), (long) entry.getValue().size());
+        }
+    }
+
+    public void setPostCalendar(Map<String, List<DailyPostEntity>> post) {
+        this.postCalendar = new HashMap<>();
+        for(Map.Entry<String, List<DailyPostEntity>> entry : post.entrySet()){
+            this.postCalendar.put(entry.getKey(), (long) entry.getValue().size());
         }
     }
 }
